@@ -8,6 +8,7 @@ import { governanceRouter } from "./governance";
 import { guestImportsRouter } from "./guest-imports";
 import { guestsRouter } from "./guests";
 import { invitesRouter } from "./invites";
+import { operationsRouter } from "./operations";
 import { websiteRouter } from "./website";
 
 export const appRouter = {
@@ -27,6 +28,7 @@ export const appRouter = {
 	audit: auditRouter,
 	audience: audienceRouter,
 	invites: invitesRouter,
+	operations: operationsRouter,
 	website: websiteRouter,
 };
 export type AppRouter = typeof appRouter;
