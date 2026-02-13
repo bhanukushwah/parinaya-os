@@ -1,5 +1,5 @@
 {
-  "id": "43de0b97-145f-4d96-8374-3b6d21c234a4",
+  "id": "bc8dbf7b-31f1-4298-9424-0584a700bf16",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -713,6 +713,729 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.gift_audit_events": {
+      "name": "gift_audit_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gifts_mode_id": {
+          "name": "gifts_mode_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gift_item_id": {
+          "name": "gift_item_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "actor_membership_id": {
+          "name": "actor_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action_type": {
+          "name": "action_type",
+          "type": "gift_audit_action",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "before_summary": {
+          "name": "before_summary",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "after_summary": {
+          "name": "after_summary",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reason_note": {
+          "name": "reason_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "gift_audit_events_wedding_created_idx": {
+          "name": "gift_audit_events_wedding_created_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_audit_events_mode_created_idx": {
+          "name": "gift_audit_events_mode_created_idx",
+          "columns": [
+            {
+              "expression": "gifts_mode_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_audit_events_actor_created_idx": {
+          "name": "gift_audit_events_actor_created_idx",
+          "columns": [
+            {
+              "expression": "actor_membership_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "gift_audit_events_gifts_mode_id_gifts_modes_id_fk": {
+          "name": "gift_audit_events_gifts_mode_id_gifts_modes_id_fk",
+          "tableFrom": "gift_audit_events",
+          "tableTo": "gifts_modes",
+          "columnsFrom": [
+            "gifts_mode_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "gift_audit_events_gift_item_id_gift_items_id_fk": {
+          "name": "gift_audit_events_gift_item_id_gift_items_id_fk",
+          "tableFrom": "gift_audit_events",
+          "tableTo": "gift_items",
+          "columnsFrom": [
+            "gift_item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "gift_audit_events_actor_membership_id_wedding_memberships_id_fk": {
+          "name": "gift_audit_events_actor_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "gift_audit_events",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "actor_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.gift_contributions": {
+      "name": "gift_contributions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gifts_mode_id": {
+          "name": "gifts_mode_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gift_item_id": {
+          "name": "gift_item_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contributor_name": {
+          "name": "contributor_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contributor_phone_e164": {
+          "name": "contributor_phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amount_paise": {
+          "name": "amount_paise",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "gift_contribution_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'website'"
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "gift_contributions_item_created_idx": {
+          "name": "gift_contributions_item_created_idx",
+          "columns": [
+            {
+              "expression": "gift_item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_contributions_mode_created_idx": {
+          "name": "gift_contributions_mode_created_idx",
+          "columns": [
+            {
+              "expression": "gifts_mode_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_contributions_wedding_created_idx": {
+          "name": "gift_contributions_wedding_created_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "gift_contributions_gifts_mode_id_gifts_modes_id_fk": {
+          "name": "gift_contributions_gifts_mode_id_gifts_modes_id_fk",
+          "tableFrom": "gift_contributions",
+          "tableTo": "gifts_modes",
+          "columnsFrom": [
+            "gifts_mode_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "gift_contributions_gift_item_id_gift_items_id_fk": {
+          "name": "gift_contributions_gift_item_id_gift_items_id_fk",
+          "tableFrom": "gift_contributions",
+          "tableTo": "gift_items",
+          "columnsFrom": [
+            "gift_item_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.gift_items": {
+      "name": "gift_items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "gifts_mode_id": {
+          "name": "gifts_mode_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_amount_paise": {
+          "name": "target_amount_paise",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount_raised_paise": {
+          "name": "amount_raised_paise",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "is_archived": {
+          "name": "is_archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "gift_items_mode_sort_idx": {
+          "name": "gift_items_mode_sort_idx",
+          "columns": [
+            {
+              "expression": "gifts_mode_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "sort_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_items_wedding_archived_idx": {
+          "name": "gift_items_wedding_archived_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_archived",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_items_wedding_completion_idx": {
+          "name": "gift_items_wedding_completion_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "completed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gift_items_wedding_progress_idx": {
+          "name": "gift_items_wedding_progress_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "target_amount_paise",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "amount_raised_paise",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "gift_items_gifts_mode_id_gifts_modes_id_fk": {
+          "name": "gift_items_gifts_mode_id_gifts_modes_id_fk",
+          "tableFrom": "gift_items",
+          "tableTo": "gifts_modes",
+          "columnsFrom": [
+            "gifts_mode_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.gifts_modes": {
+      "name": "gifts_modes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode_status": {
+          "name": "mode_status",
+          "type": "gifts_mode_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "upi_payee_name": {
+          "name": "upi_payee_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "upi_id": {
+          "name": "upi_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "upi_qr_image_url": {
+          "name": "upi_qr_image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "message_note": {
+          "name": "message_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pre_publish_note": {
+          "name": "pre_publish_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "disabled_reason": {
+          "name": "disabled_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "draft_revision": {
+          "name": "draft_revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "last_published_revision": {
+          "name": "last_published_revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hidden_at": {
+          "name": "hidden_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "disabled_at": {
+          "name": "disabled_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_state_changed_at": {
+          "name": "last_state_changed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_projection": {
+          "name": "published_projection",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "gifts_modes_wedding_unique": {
+          "name": "gifts_modes_wedding_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "gifts_modes_wedding_status_updated_idx": {
+          "name": "gifts_modes_wedding_status_updated_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "mode_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.audit_logs": {
       "name": "audit_logs",
       "schema": "",
@@ -1021,6 +1744,3992 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.event_audience_overrides": {
+      "name": "event_audience_overrides",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "audience_selection_id": {
+          "name": "audience_selection_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guest_unit_id": {
+          "name": "guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "override_type": {
+          "name": "override_type",
+          "type": "audience_override_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "event_audience_overrides_unique": {
+          "name": "event_audience_overrides_unique",
+          "columns": [
+            {
+              "expression": "audience_selection_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "guest_unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "override_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "event_audience_overrides_lookup_idx": {
+          "name": "event_audience_overrides_lookup_idx",
+          "columns": [
+            {
+              "expression": "audience_selection_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "override_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "event_audience_overrides_audience_selection_id_event_audience_selections_id_fk": {
+          "name": "event_audience_overrides_audience_selection_id_event_audience_selections_id_fk",
+          "tableFrom": "event_audience_overrides",
+          "tableTo": "event_audience_selections",
+          "columnsFrom": [
+            "audience_selection_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "event_audience_overrides_guest_unit_id_guest_units_id_fk": {
+          "name": "event_audience_overrides_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "event_audience_overrides",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "event_audience_overrides_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "event_audience_overrides_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "event_audience_overrides",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.event_audience_selection_tags": {
+      "name": "event_audience_selection_tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "audience_selection_id": {
+          "name": "audience_selection_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "event_audience_selection_tags_unique": {
+          "name": "event_audience_selection_tags_unique",
+          "columns": [
+            {
+              "expression": "audience_selection_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tag_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "event_audience_selection_tags_audience_selection_id_event_audience_selections_id_fk": {
+          "name": "event_audience_selection_tags_audience_selection_id_event_audience_selections_id_fk",
+          "tableFrom": "event_audience_selection_tags",
+          "tableTo": "event_audience_selections",
+          "columnsFrom": [
+            "audience_selection_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "event_audience_selection_tags_tag_id_guest_tags_id_fk": {
+          "name": "event_audience_selection_tags_tag_id_guest_tags_id_fk",
+          "tableFrom": "event_audience_selection_tags",
+          "tableTo": "guest_tags",
+          "columnsFrom": [
+            "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.event_audience_selections": {
+      "name": "event_audience_selections",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "side": {
+          "name": "side",
+          "type": "guest_side",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "search_text": {
+          "name": "search_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "event_audience_selections_event_unique": {
+          "name": "event_audience_selections_event_unique",
+          "columns": [
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "event_audience_selections_wedding_event_idx": {
+          "name": "event_audience_selections_wedding_event_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "event_audience_selections_event_id_wedding_events_id_fk": {
+          "name": "event_audience_selections_event_id_wedding_events_id_fk",
+          "tableFrom": "event_audience_selections",
+          "tableTo": "wedding_events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "event_audience_selections_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "event_audience_selections_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "event_audience_selections",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "event_audience_selections_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "event_audience_selections_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "event_audience_selections",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_identities": {
+      "name": "guest_identities",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalized_phone_e164": {
+          "name": "normalized_phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_label": {
+          "name": "display_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "is_inviteable": {
+          "name": "is_inviteable",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "deactivated_at": {
+          "name": "deactivated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_identities_wedding_phone_unique": {
+          "name": "guest_identities_wedding_phone_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "normalized_phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_identities_wedding_active_idx": {
+          "name": "guest_identities_wedding_active_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_inviteable",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_identities_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_identities_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_identities",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_identities_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_identities_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_identities",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_import_rows": {
+      "name": "guest_import_rows",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "import_run_id": {
+          "name": "import_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "row_number": {
+          "name": "row_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_payload": {
+          "name": "source_payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "raw_name": {
+          "name": "raw_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "raw_phone": {
+          "name": "raw_phone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "normalized_phone_e164": {
+          "name": "normalized_phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resolved_identity_id": {
+          "name": "resolved_identity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resolved_person_id": {
+          "name": "resolved_person_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resolved_guest_unit_id": {
+          "name": "resolved_guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "guest_import_row_outcome",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'skipped_no_phone'"
+        },
+        "is_inviteable": {
+          "name": "is_inviteable",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "warning_detail": {
+          "name": "warning_detail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "processing_error": {
+          "name": "processing_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_import_rows_run_row_unique": {
+          "name": "guest_import_rows_run_row_unique",
+          "columns": [
+            {
+              "expression": "import_run_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "row_number",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_import_rows_wedding_outcome_idx": {
+          "name": "guest_import_rows_wedding_outcome_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "outcome",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_inviteable",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_import_rows_phone_lookup_idx": {
+          "name": "guest_import_rows_phone_lookup_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "normalized_phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_import_rows_import_run_id_guest_import_runs_id_fk": {
+          "name": "guest_import_rows_import_run_id_guest_import_runs_id_fk",
+          "tableFrom": "guest_import_rows",
+          "tableTo": "guest_import_runs",
+          "columnsFrom": [
+            "import_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_import_rows_resolved_identity_id_guest_identities_id_fk": {
+          "name": "guest_import_rows_resolved_identity_id_guest_identities_id_fk",
+          "tableFrom": "guest_import_rows",
+          "tableTo": "guest_identities",
+          "columnsFrom": [
+            "resolved_identity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_import_rows_resolved_person_id_guest_people_id_fk": {
+          "name": "guest_import_rows_resolved_person_id_guest_people_id_fk",
+          "tableFrom": "guest_import_rows",
+          "tableTo": "guest_people",
+          "columnsFrom": [
+            "resolved_person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_import_rows_resolved_guest_unit_id_guest_units_id_fk": {
+          "name": "guest_import_rows_resolved_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "guest_import_rows",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "resolved_guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_import_runs": {
+      "name": "guest_import_runs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "channel": {
+          "name": "channel",
+          "type": "guest_import_channel",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "guest_import_run_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_file_name": {
+          "name": "source_file_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_fingerprint": {
+          "name": "source_fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rows_total": {
+          "name": "rows_total",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_processed": {
+          "name": "rows_processed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_created": {
+          "name": "rows_created",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_updated": {
+          "name": "rows_updated",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_reactivated": {
+          "name": "rows_reactivated",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_warning": {
+          "name": "rows_warning",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_skipped": {
+          "name": "rows_skipped",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "rows_failed": {
+          "name": "rows_failed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failed_at": {
+          "name": "failed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_import_runs_wedding_idempotency_unique": {
+          "name": "guest_import_runs_wedding_idempotency_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"guest_import_runs\".\"idempotency_key\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_import_runs_wedding_status_idx": {
+          "name": "guest_import_runs_wedding_status_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_import_runs_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_import_runs_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_import_runs",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_import_runs_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_import_runs_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_import_runs",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_people": {
+      "name": "guest_people",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "identity_id": {
+          "name": "identity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "given_name": {
+          "name": "given_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "family_name": {
+          "name": "family_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nickname": {
+          "name": "nickname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "side": {
+          "name": "side",
+          "type": "guest_side",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'neutral'"
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "is_inviteable": {
+          "name": "is_inviteable",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_people_identity_unique": {
+          "name": "guest_people_identity_unique",
+          "columns": [
+            {
+              "expression": "identity_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_people_wedding_side_idx": {
+          "name": "guest_people_wedding_side_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "side",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_people_wedding_inviteable_idx": {
+          "name": "guest_people_wedding_inviteable_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_inviteable",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_people_identity_id_guest_identities_id_fk": {
+          "name": "guest_people_identity_id_guest_identities_id_fk",
+          "tableFrom": "guest_people",
+          "tableTo": "guest_identities",
+          "columnsFrom": [
+            "identity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_people_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_people_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_people",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_people_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_people_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_people",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_person_tags": {
+      "name": "guest_person_tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "applied_by_membership_id": {
+          "name": "applied_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_person_tags_person_tag_unique": {
+          "name": "guest_person_tags_person_tag_unique",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tag_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_person_tags_wedding_tag_idx": {
+          "name": "guest_person_tags_wedding_tag_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tag_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_person_tags_person_id_guest_people_id_fk": {
+          "name": "guest_person_tags_person_id_guest_people_id_fk",
+          "tableFrom": "guest_person_tags",
+          "tableTo": "guest_people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_person_tags_tag_id_guest_tags_id_fk": {
+          "name": "guest_person_tags_tag_id_guest_tags_id_fk",
+          "tableFrom": "guest_person_tags",
+          "tableTo": "guest_tags",
+          "columnsFrom": [
+            "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_person_tags_applied_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_person_tags_applied_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_person_tags",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "applied_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_tags": {
+      "name": "guest_tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_tags_wedding_key_unique": {
+          "name": "guest_tags_wedding_key_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_tags_wedding_active_idx": {
+          "name": "guest_tags_wedding_active_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_tags_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_tags_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_tags",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_tags_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_tags_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_tags",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_unit_members": {
+      "name": "guest_unit_members",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guest_unit_id": {
+          "name": "guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "relationship_label": {
+          "name": "relationship_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_primary_contact": {
+          "name": "is_primary_contact",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "left_at": {
+          "name": "left_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_unit_members_one_active_membership_per_person": {
+          "name": "guest_unit_members_one_active_membership_per_person",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"guest_unit_members\".\"is_active\" = true",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_unit_members_unique_active_pair": {
+          "name": "guest_unit_members_unique_active_pair",
+          "columns": [
+            {
+              "expression": "guest_unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"guest_unit_members\".\"is_active\" = true",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_unit_members_wedding_unit_active_idx": {
+          "name": "guest_unit_members_wedding_unit_active_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "guest_unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_unit_members_guest_unit_id_guest_units_id_fk": {
+          "name": "guest_unit_members_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "guest_unit_members",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_unit_members_person_id_guest_people_id_fk": {
+          "name": "guest_unit_members_person_id_guest_people_id_fk",
+          "tableFrom": "guest_unit_members",
+          "tableTo": "guest_people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_unit_members_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_unit_members_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_unit_members",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_unit_members_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_unit_members_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_unit_members",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_unit_tags": {
+      "name": "guest_unit_tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guest_unit_id": {
+          "name": "guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tag_id": {
+          "name": "tag_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "applied_by_membership_id": {
+          "name": "applied_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_unit_tags_unit_tag_unique": {
+          "name": "guest_unit_tags_unit_tag_unique",
+          "columns": [
+            {
+              "expression": "guest_unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tag_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_unit_tags_wedding_tag_idx": {
+          "name": "guest_unit_tags_wedding_tag_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "tag_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_unit_tags_guest_unit_id_guest_units_id_fk": {
+          "name": "guest_unit_tags_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "guest_unit_tags",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_unit_tags_tag_id_guest_tags_id_fk": {
+          "name": "guest_unit_tags_tag_id_guest_tags_id_fk",
+          "tableFrom": "guest_unit_tags",
+          "tableTo": "guest_tags",
+          "columnsFrom": [
+            "tag_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "guest_unit_tags_applied_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_unit_tags_applied_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_unit_tags",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "applied_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.guest_units": {
+      "name": "guest_units",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "side": {
+          "name": "side",
+          "type": "guest_side",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'neutral'"
+        },
+        "delivery_identity_id": {
+          "name": "delivery_identity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "is_inviteable": {
+          "name": "is_inviteable",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "guest_units_active_delivery_identity_unique": {
+          "name": "guest_units_active_delivery_identity_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "delivery_identity_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"guest_units\".\"is_active\" = true and \"guest_units\".\"delivery_identity_id\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_units_wedding_side_idx": {
+          "name": "guest_units_wedding_side_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "side",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "guest_units_wedding_inviteable_idx": {
+          "name": "guest_units_wedding_inviteable_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_inviteable",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "guest_units_delivery_identity_id_guest_identities_id_fk": {
+          "name": "guest_units_delivery_identity_id_guest_identities_id_fk",
+          "tableFrom": "guest_units",
+          "tableTo": "guest_identities",
+          "columnsFrom": [
+            "delivery_identity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_units_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_units_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_units",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "guest_units_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "guest_units_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "guest_units",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rsvp_flow_sessions": {
+      "name": "rsvp_flow_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guest_unit_id": {
+          "name": "guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "identity_id": {
+          "name": "identity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_invite_message_id": {
+          "name": "last_invite_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_e164": {
+          "name": "phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flow_status": {
+          "name": "flow_status",
+          "type": "rsvp_flow_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "current_step": {
+          "name": "current_step",
+          "type": "rsvp_flow_step",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'identity-response'"
+        },
+        "step_index": {
+          "name": "step_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_inbound_at": {
+          "name": "last_inbound_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_outbound_at": {
+          "name": "last_outbound_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "final_response": {
+          "name": "final_response",
+          "type": "rsvp_final_response",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "confirmation_summary": {
+          "name": "confirmation_summary",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_conversation_id": {
+          "name": "provider_conversation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_provider_message_id": {
+          "name": "last_provider_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "rsvp_flow_sessions_wedding_event_phone_idx": {
+          "name": "rsvp_flow_sessions_wedding_event_phone_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "rsvp_flow_sessions_wedding_status_updated_idx": {
+          "name": "rsvp_flow_sessions_wedding_status_updated_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "flow_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "rsvp_flow_sessions_one_active_phone_unique": {
+          "name": "rsvp_flow_sessions_one_active_phone_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"rsvp_flow_sessions\".\"flow_status\" = 'active'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "rsvp_flow_sessions_event_id_wedding_events_id_fk": {
+          "name": "rsvp_flow_sessions_event_id_wedding_events_id_fk",
+          "tableFrom": "rsvp_flow_sessions",
+          "tableTo": "wedding_events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "rsvp_flow_sessions_guest_unit_id_guest_units_id_fk": {
+          "name": "rsvp_flow_sessions_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "rsvp_flow_sessions",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "rsvp_flow_sessions_identity_id_guest_identities_id_fk": {
+          "name": "rsvp_flow_sessions_identity_id_guest_identities_id_fk",
+          "tableFrom": "rsvp_flow_sessions",
+          "tableTo": "guest_identities",
+          "columnsFrom": [
+            "identity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "rsvp_flow_sessions_last_invite_message_id_invite_messages_id_fk": {
+          "name": "rsvp_flow_sessions_last_invite_message_id_invite_messages_id_fk",
+          "tableFrom": "rsvp_flow_sessions",
+          "tableTo": "invite_messages",
+          "columnsFrom": [
+            "last_invite_message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rsvp_person_responses": {
+      "name": "rsvp_person_responses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "flow_session_id": {
+          "name": "flow_session_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guest_unit_id": {
+          "name": "guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "response": {
+          "name": "response",
+          "type": "rsvp_final_response",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "rsvp_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'whatsapp'"
+        },
+        "response_revision": {
+          "name": "response_revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "responded_at": {
+          "name": "responded_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "rsvp_person_responses_event_person_unique": {
+          "name": "rsvp_person_responses_event_person_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "rsvp_person_responses_guest_unit_response_idx": {
+          "name": "rsvp_person_responses_guest_unit_response_idx",
+          "columns": [
+            {
+              "expression": "guest_unit_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "response",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "rsvp_person_responses_flow_session_id_rsvp_flow_sessions_id_fk": {
+          "name": "rsvp_person_responses_flow_session_id_rsvp_flow_sessions_id_fk",
+          "tableFrom": "rsvp_person_responses",
+          "tableTo": "rsvp_flow_sessions",
+          "columnsFrom": [
+            "flow_session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "rsvp_person_responses_event_id_wedding_events_id_fk": {
+          "name": "rsvp_person_responses_event_id_wedding_events_id_fk",
+          "tableFrom": "rsvp_person_responses",
+          "tableTo": "wedding_events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "rsvp_person_responses_guest_unit_id_guest_units_id_fk": {
+          "name": "rsvp_person_responses_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "rsvp_person_responses",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "rsvp_person_responses_person_id_guest_people_id_fk": {
+          "name": "rsvp_person_responses_person_id_guest_people_id_fk",
+          "tableFrom": "rsvp_person_responses",
+          "tableTo": "guest_people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.website_otp_challenges": {
+      "name": "website_otp_challenges",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalized_phone_e164": {
+          "name": "normalized_phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code_hash": {
+          "name": "code_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "website_otp_challenge_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "attempts_remaining": {
+          "name": "attempts_remaining",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 5
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "website_otp_challenges_wedding_phone_status_idx": {
+          "name": "website_otp_challenges_wedding_phone_status_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "normalized_phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.website_sync_states": {
+      "name": "website_sync_states",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "snapshot_version": {
+          "name": "snapshot_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "last_updated_at": {
+          "name": "last_updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_successful_sync_at": {
+          "name": "last_successful_sync_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lag_seconds": {
+          "name": "lag_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "is_stale": {
+          "name": "is_stale",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "stale_reason": {
+          "name": "stale_reason",
+          "type": "website_sync_stale_reason",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_error_detail": {
+          "name": "last_error_detail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_error_at": {
+          "name": "last_error_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "projection": {
+          "name": "projection",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "website_sync_states_wedding_event_unique": {
+          "name": "website_sync_states_wedding_event_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"website_sync_states\".\"event_id\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "website_sync_states_wedding_stale_idx": {
+          "name": "website_sync_states_wedding_stale_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_stale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "website_sync_states_event_id_wedding_events_id_fk": {
+          "name": "website_sync_states_event_id_wedding_events_id_fk",
+          "tableFrom": "website_sync_states",
+          "tableTo": "wedding_events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.website_trusted_sessions": {
+      "name": "website_trusted_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalized_phone_e164": {
+          "name": "normalized_phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_revoked": {
+          "name": "is_revoked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "website_trusted_sessions_token_hash_unique": {
+          "name": "website_trusted_sessions_token_hash_unique",
+          "columns": [
+            {
+              "expression": "token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "website_trusted_sessions_wedding_phone_active_idx": {
+          "name": "website_trusted_sessions_wedding_phone_active_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "normalized_phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "expires_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.invite_do_not_messages": {
+      "name": "invite_do_not_messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "identity_id": {
+          "name": "identity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_e164": {
+          "name": "phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason_note": {
+          "name": "reason_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_label": {
+          "name": "source_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'operator'"
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked_by_membership_id": {
+          "name": "revoked_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "invite_do_not_messages_wedding_phone_active_unique": {
+          "name": "invite_do_not_messages_wedding_phone_active_unique",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"invite_do_not_messages\".\"is_active\" = true and \"invite_do_not_messages\".\"revoked_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_do_not_messages_wedding_active_idx": {
+          "name": "invite_do_not_messages_wedding_active_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "invite_do_not_messages_identity_id_guest_identities_id_fk": {
+          "name": "invite_do_not_messages_identity_id_guest_identities_id_fk",
+          "tableFrom": "invite_do_not_messages",
+          "tableTo": "guest_identities",
+          "columnsFrom": [
+            "identity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "invite_do_not_messages_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "invite_do_not_messages_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "invite_do_not_messages",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "invite_do_not_messages_revoked_by_membership_id_wedding_memberships_id_fk": {
+          "name": "invite_do_not_messages_revoked_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "invite_do_not_messages",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "revoked_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.invite_lifecycle_transitions": {
+      "name": "invite_lifecycle_transitions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "invite_message_id": {
+          "name": "invite_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "from_status": {
+          "name": "from_status",
+          "type": "invite_message_lifecycle_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_status": {
+          "name": "to_status",
+          "type": "invite_message_lifecycle_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "invite_lifecycle_transition_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "webhook_receipt_id": {
+          "name": "webhook_receipt_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_event_at": {
+          "name": "provider_event_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_duplicate": {
+          "name": "is_duplicate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "reason_note": {
+          "name": "reason_note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "applied_at": {
+          "name": "applied_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "invite_lifecycle_transitions_message_applied_idx": {
+          "name": "invite_lifecycle_transitions_message_applied_idx",
+          "columns": [
+            {
+              "expression": "invite_message_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "applied_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_lifecycle_transitions_wedding_status_idx": {
+          "name": "invite_lifecycle_transitions_wedding_status_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "to_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "applied_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_lifecycle_transitions_webhook_dedupe_unique": {
+          "name": "invite_lifecycle_transitions_webhook_dedupe_unique",
+          "columns": [
+            {
+              "expression": "webhook_receipt_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "to_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"invite_lifecycle_transitions\".\"webhook_receipt_id\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "invite_lifecycle_transitions_invite_message_id_invite_messages_id_fk": {
+          "name": "invite_lifecycle_transitions_invite_message_id_invite_messages_id_fk",
+          "tableFrom": "invite_lifecycle_transitions",
+          "tableTo": "invite_messages",
+          "columnsFrom": [
+            "invite_message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invite_lifecycle_transitions_webhook_receipt_id_invite_webhook_receipts_id_fk": {
+          "name": "invite_lifecycle_transitions_webhook_receipt_id_invite_webhook_receipts_id_fk",
+          "tableFrom": "invite_lifecycle_transitions",
+          "tableTo": "invite_webhook_receipts",
+          "columnsFrom": [
+            "webhook_receipt_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.invite_messages": {
+      "name": "invite_messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "invite_run_id": {
+          "name": "invite_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recipient_guest_unit_id": {
+          "name": "recipient_guest_unit_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recipient_identity_id": {
+          "name": "recipient_identity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recipient_phone_e164": {
+          "name": "recipient_phone_e164",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lifecycle_status": {
+          "name": "lifecycle_status",
+          "type": "invite_message_lifecycle_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'failed'"
+        },
+        "is_blocked": {
+          "name": "is_blocked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "rejection_reason": {
+          "name": "rejection_reason",
+          "type": "invite_policy_rejection_reason",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_message_id": {
+          "name": "provider_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_error_code": {
+          "name": "provider_error_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_error_message": {
+          "name": "provider_error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dispatched_at": {
+          "name": "dispatched_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "delivered_at": {
+          "name": "delivered_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "read_at": {
+          "name": "read_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failed_at": {
+          "name": "failed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_status_at": {
+          "name": "last_status_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "invite_messages_run_created_idx": {
+          "name": "invite_messages_run_created_idx",
+          "columns": [
+            {
+              "expression": "invite_run_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_messages_event_status_idx": {
+          "name": "invite_messages_event_status_idx",
+          "columns": [
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "lifecycle_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "last_status_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_messages_wedding_phone_idx": {
+          "name": "invite_messages_wedding_phone_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "recipient_phone_e164",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_messages_provider_message_id_unique": {
+          "name": "invite_messages_provider_message_id_unique",
+          "columns": [
+            {
+              "expression": "provider_message_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"invite_messages\".\"provider_message_id\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "invite_messages_invite_run_id_invite_send_runs_id_fk": {
+          "name": "invite_messages_invite_run_id_invite_send_runs_id_fk",
+          "tableFrom": "invite_messages",
+          "tableTo": "invite_send_runs",
+          "columnsFrom": [
+            "invite_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invite_messages_event_id_wedding_events_id_fk": {
+          "name": "invite_messages_event_id_wedding_events_id_fk",
+          "tableFrom": "invite_messages",
+          "tableTo": "wedding_events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invite_messages_recipient_guest_unit_id_guest_units_id_fk": {
+          "name": "invite_messages_recipient_guest_unit_id_guest_units_id_fk",
+          "tableFrom": "invite_messages",
+          "tableTo": "guest_units",
+          "columnsFrom": [
+            "recipient_guest_unit_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "invite_messages_recipient_identity_id_guest_identities_id_fk": {
+          "name": "invite_messages_recipient_identity_id_guest_identities_id_fk",
+          "tableFrom": "invite_messages",
+          "tableTo": "guest_identities",
+          "columnsFrom": [
+            "recipient_identity_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.invite_send_runs": {
+      "name": "invite_send_runs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_id": {
+          "name": "event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "invite_send_run_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "template_name": {
+          "name": "template_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "template_language": {
+          "name": "template_language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'en'"
+        },
+        "audience_snapshot": {
+          "name": "audience_snapshot",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_candidates": {
+          "name": "total_candidates",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "eligible_count": {
+          "name": "eligible_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "blocked_count": {
+          "name": "blocked_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "sent_count": {
+          "name": "sent_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "failed_count": {
+          "name": "failed_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failed_at": {
+          "name": "failed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by_membership_id": {
+          "name": "created_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_by_membership_id": {
+          "name": "updated_by_membership_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "invite_send_runs_wedding_event_created_idx": {
+          "name": "invite_send_runs_wedding_event_created_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_send_runs_wedding_status_created_idx": {
+          "name": "invite_send_runs_wedding_status_created_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "invite_send_runs_event_id_wedding_events_id_fk": {
+          "name": "invite_send_runs_event_id_wedding_events_id_fk",
+          "tableFrom": "invite_send_runs",
+          "tableTo": "wedding_events",
+          "columnsFrom": [
+            "event_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "invite_send_runs_created_by_membership_id_wedding_memberships_id_fk": {
+          "name": "invite_send_runs_created_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "invite_send_runs",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "created_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "invite_send_runs_updated_by_membership_id_wedding_memberships_id_fk": {
+          "name": "invite_send_runs_updated_by_membership_id_wedding_memberships_id_fk",
+          "tableFrom": "invite_send_runs",
+          "tableTo": "wedding_memberships",
+          "columnsFrom": [
+            "updated_by_membership_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.invite_webhook_receipts": {
+      "name": "invite_webhook_receipts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "wedding_id": {
+          "name": "wedding_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "invite_message_id": {
+          "name": "invite_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_message_id": {
+          "name": "provider_message_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event_status": {
+          "name": "event_status",
+          "type": "invite_message_lifecycle_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "event_at": {
+          "name": "event_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "auth_result": {
+          "name": "auth_result",
+          "type": "invite_webhook_auth_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unknown'"
+        },
+        "receipt_status": {
+          "name": "receipt_status",
+          "type": "invite_webhook_receipt_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'ignored'"
+        },
+        "dedupe_key": {
+          "name": "dedupe_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payload": {
+          "name": "payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "headers": {
+          "name": "headers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error_detail": {
+          "name": "error_detail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "received_at": {
+          "name": "received_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "processed_at": {
+          "name": "processed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "invite_webhook_receipts_dedupe_key_unique": {
+          "name": "invite_webhook_receipts_dedupe_key_unique",
+          "columns": [
+            {
+              "expression": "dedupe_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_webhook_receipts_message_event_idx": {
+          "name": "invite_webhook_receipts_message_event_idx",
+          "columns": [
+            {
+              "expression": "provider_message_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "event_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "invite_webhook_receipts_wedding_received_idx": {
+          "name": "invite_webhook_receipts_wedding_received_idx",
+          "columns": [
+            {
+              "expression": "wedding_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "received_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "invite_webhook_receipts_invite_message_id_invite_messages_id_fk": {
+          "name": "invite_webhook_receipts_invite_message_id_invite_messages_id_fk",
+          "tableFrom": "invite_webhook_receipts",
+          "tableTo": "invite_messages",
+          "columnsFrom": [
+            "invite_message_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -1051,6 +5760,36 @@
         "contact"
       ]
     },
+    "public.gift_audit_action": {
+      "name": "gift_audit_action",
+      "schema": "public",
+      "values": [
+        "gift.publish",
+        "gift.hide",
+        "gift.disable",
+        "gift.edit",
+        "gift.item.edit",
+        "gift.contribution.create"
+      ]
+    },
+    "public.gift_contribution_source": {
+      "name": "gift_contribution_source",
+      "schema": "public",
+      "values": [
+        "website",
+        "manual"
+      ]
+    },
+    "public.gifts_mode_status": {
+      "name": "gifts_mode_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "published",
+        "hidden",
+        "disabled"
+      ]
+    },
     "public.audit_target_type": {
       "name": "audit_target_type",
       "schema": "public",
@@ -1059,6 +5798,7 @@
         "event",
         "membership",
         "guest",
+        "gift",
         "invite",
         "system"
       ]
@@ -1070,6 +5810,168 @@
         "owner",
         "admin",
         "coordinator"
+      ]
+    },
+    "public.audience_override_type": {
+      "name": "audience_override_type",
+      "schema": "public",
+      "values": [
+        "include",
+        "exclude"
+      ]
+    },
+    "public.guest_import_channel": {
+      "name": "guest_import_channel",
+      "schema": "public",
+      "values": [
+        "csv",
+        "contacts",
+        "manual-row"
+      ]
+    },
+    "public.guest_import_row_outcome": {
+      "name": "guest_import_row_outcome",
+      "schema": "public",
+      "values": [
+        "created",
+        "updated",
+        "reactivated",
+        "warning_malformed_phone",
+        "skipped_no_phone"
+      ]
+    },
+    "public.guest_import_run_status": {
+      "name": "guest_import_run_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "partial"
+      ]
+    },
+    "public.guest_side": {
+      "name": "guest_side",
+      "schema": "public",
+      "values": [
+        "bride",
+        "groom",
+        "neutral"
+      ]
+    },
+    "public.rsvp_final_response": {
+      "name": "rsvp_final_response",
+      "schema": "public",
+      "values": [
+        "accept",
+        "decline"
+      ]
+    },
+    "public.rsvp_flow_status": {
+      "name": "rsvp_flow_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "completed",
+        "cancelled",
+        "expired"
+      ]
+    },
+    "public.rsvp_flow_step": {
+      "name": "rsvp_flow_step",
+      "schema": "public",
+      "values": [
+        "identity-response",
+        "attendance-details",
+        "final-confirmation"
+      ]
+    },
+    "public.rsvp_source": {
+      "name": "rsvp_source",
+      "schema": "public",
+      "values": [
+        "whatsapp",
+        "website"
+      ]
+    },
+    "public.website_otp_challenge_status": {
+      "name": "website_otp_challenge_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "verified",
+        "expired",
+        "locked"
+      ]
+    },
+    "public.website_sync_stale_reason": {
+      "name": "website_sync_stale_reason",
+      "schema": "public",
+      "values": [
+        "lag-threshold-exceeded",
+        "sync-error",
+        "never-synced",
+        "manual-override"
+      ]
+    },
+    "public.invite_lifecycle_transition_source": {
+      "name": "invite_lifecycle_transition_source",
+      "schema": "public",
+      "values": [
+        "dispatch",
+        "webhook"
+      ]
+    },
+    "public.invite_message_lifecycle_status": {
+      "name": "invite_message_lifecycle_status",
+      "schema": "public",
+      "values": [
+        "sent",
+        "delivered",
+        "read",
+        "failed"
+      ]
+    },
+    "public.invite_policy_rejection_reason": {
+      "name": "invite_policy_rejection_reason",
+      "schema": "public",
+      "values": [
+        "dnm_blocked",
+        "recipient_not_inviteable",
+        "missing_phone",
+        "missing_source",
+        "provider_configuration_missing"
+      ]
+    },
+    "public.invite_send_run_status": {
+      "name": "invite_send_run_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "partial"
+      ]
+    },
+    "public.invite_webhook_auth_result": {
+      "name": "invite_webhook_auth_result",
+      "schema": "public",
+      "values": [
+        "verified",
+        "invalid_signature",
+        "invalid_payload",
+        "unknown"
+      ]
+    },
+    "public.invite_webhook_receipt_status": {
+      "name": "invite_webhook_receipt_status",
+      "schema": "public",
+      "values": [
+        "accepted",
+        "ignored",
+        "rejected"
       ]
     }
   },
