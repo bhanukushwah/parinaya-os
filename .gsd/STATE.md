@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 2 (complete)
-- Plan: 02-06 complete (gap closure complete)
-- Status: Phase 2 now has service-owned audience-to-recipient wiring with verification passed
-- Last activity: 2026-02-13 — Executed 02-06 gap-closure plan for audience service/router wiring
+- Phase: 3 (planned)
+- Plan: 03-04 complete (checkpoint pending)
+- Status: Phase 3 wave-1 implementation complete (03-01..03-04) with human verification required before 03-05
+- Last activity: 2026-02-13 — Implemented schema/env foundation, dispatch pipeline, webhook lifecycle ingestion, and invite dashboard routes
 
 ## Accumulated Context
 
@@ -59,4 +59,14 @@
 - Phase 2 gap-closure plan (`02-06`) moved `resolveRecipients(...)` wiring into `packages/api/src/services/audience-builder.ts` and removed independent router orchestration.
 - Audience router now consumes `audience.recipients` for both `preview` and `precheckSend`, preserving the shared computation path and stable response contract.
 - Verification result (phase): `.gsd/phases/02-guest-model-import-pipeline-and-audience-selection/02-VERIFICATION.md` now passes with no remaining must-have gaps.
-- Next execution point: Phase 3 planning and execution.
+- Phase 3 context is captured at `.gsd/phases/03-whatsapp-invite-delivery-and-compliance-safety/03-CONTEXT.md` with locked decisions on Cloud API-only sends, monotonic lifecycle, and pre-send compliance gating.
+- Phase 3 research is captured at `.gsd/phases/03-whatsapp-invite-delivery-and-compliance-safety/03-RESEARCH.md` with prescriptive architecture for run/message persistence, provider adapter isolation, and webhook idempotency.
+- Phase 3 plans are defined: `03-01` schema/env foundation, `03-02` dispatch/policy pipeline, `03-03` webhook monotonic lifecycle, `03-04` operator UI routes, `03-05` tests + phase verification.
+- Phase 3 schema now includes `invite_send_runs`, `invite_messages`, `invite_webhook_receipts`, `invite_lifecycle_transitions`, and `invite_do_not_messages` with migration artifacts (`0003_curly_chat.sql`).
+- Runtime env contract now validates WhatsApp provider/webhook keys: `WHATSAPP_API_BASE_URL`, `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_WEBHOOK_VERIFY_TOKEN`, `WHATSAPP_WEBHOOK_APP_SECRET`.
+- API now includes `whatsapp-policy`, `whatsapp-provider`, and `whatsapp-dispatch` services plus `invites` router procedures for precheck/send/list/detail and DNM list reads.
+- Server host now exposes `/webhooks/whatsapp` (GET verification + POST ingestion) wired to authenticated webhook processing and monotonic lifecycle transitions.
+- Web dashboard now includes `/dashboard/invites` and `/dashboard/invites/$runId` with server-backed run/message counters, blocked reasons, and lifecycle traces.
+- Route tree now includes invite dashboard routes at `apps/web/src/routeTree.gen.ts`.
+- Verification note (03-01..03-04): `bun run db:generate`, `bunx tsc --noEmit -p packages/db/tsconfig.json`, `bunx tsc --noEmit -p packages/env/tsconfig.json`, `bunx tsc --noEmit -p packages/api/tsconfig.json`, `bunx tsc --noEmit -p apps/server/tsconfig.json`, `bunx tsc --noEmit -p apps/web/tsconfig.json`, and `bun run --filter web build` passed.
+- Pending checkpoint: human verification required for invite dashboard flow before executing 03-05.
