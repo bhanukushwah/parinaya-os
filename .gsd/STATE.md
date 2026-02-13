@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 4 (complete)
-- Plan: 04-01 through 04-05 complete
-- Status: Phase 4 completed with automated + human verification passing; ready for Phase 5 planning
-- Last activity: 2026-02-13 — Approved phase-04 human checkpoint and marked verification passed
+- Phase: 5 (executing)
+- Plan: 05-03 in progress (05-01 and 05-02 complete)
+- Status: Awaiting human verification checkpoint for `/dashboard/operations` UI and export flow
+- Last activity: 2026-02-13 — Implemented operations dataset/router/export contracts and shipped dashboard route with URL-persisted filters
 
 ## Accumulated Context
 
@@ -80,3 +80,8 @@
 - Web app now includes website routes `apps/web/src/routes/site.$weddingSlug.tsx` and `apps/web/src/routes/site.$weddingSlug.verify.tsx` plus reusable stale-banner/sticky-CTA components.
 - Verification artifact generated at `.gsd/phases/04-rsvp-completion-wedding-website-sync/04-VERIFICATION.md` with status `human_needed` pending UI checkpoint approval.
 - Human checkpoint for Phase 4 website UX is now approved and verification status moved to `passed`.
+- Phase 5 context is captured at `.gsd/phases/05-parent-operations-dashboard-and-exports/05-CONTEXT.md` with locked person-level metrics semantics, strict filter logic, stable CSV header contract, and deterministic ordering decisions.
+- Phase 5 plans are now defined: `05-01` shared operations dataset/router contracts, `05-02` deterministic export service/endpoint, `05-03` dashboard UI + human verification checkpoint, and `05-04` tests + phase verification report.
+- Phase 5 plan `05-01` is complete with new operations dataset service (`packages/api/src/services/operations-dashboard.ts`) and operations router integration in app composition.
+- Phase 5 plan `05-02` is complete with deterministic CSV serializer (`packages/api/src/services/operations-export.ts`) and `operations.exportCsv` endpoint reusing shared dataset semantics.
+- Phase 5 plan `05-03` auto tasks are implemented with `/dashboard/operations`, reusable filter/metrics components, URL-persisted `event/side/rsvpStatus` filters, `Data as of` display, and export preview/download wiring.
