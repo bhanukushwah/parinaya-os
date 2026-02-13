@@ -8,6 +8,10 @@ export const AUDIT_ACTIONS = {
 	EVENT_REORDER: "event.reorder",
 	EVENT_RESTORE: "event.restore",
 	EVENT_VISIBILITY_CHANGE: "event.visibility.change",
+	GIFT_DISABLE: "gift.disable",
+	GIFT_EDIT: "gift.edit",
+	GIFT_HIDE: "gift.hide",
+	GIFT_PUBLISH: "gift.publish",
 	GUEST_EDIT: "guest.edit",
 	GUEST_IMPORT_STARTED: "guest.import.started",
 	GUEST_IMPORT_COMPLETED: "guest.import.completed",
@@ -21,6 +25,7 @@ export type AuditTargetType =
 	| "event"
 	| "membership"
 	| "guest"
+	| "gift"
 	| "invite"
 	| "system";
 

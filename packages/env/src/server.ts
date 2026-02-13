@@ -27,6 +27,11 @@ export const env = createEnv({
 			.int()
 			.min(10)
 			.default(120),
+		GIFTS_STALE_THRESHOLD_SECONDS: z.coerce.number().int().min(30).default(300),
+		GIFTS_UNAVAILABLE_MESSAGE: z
+			.string()
+			.min(8)
+			.default("Gifts are currently unavailable. Please check back later."),
 		NODE_ENV: z
 			.enum(["development", "production", "test"])
 			.default("development"),

@@ -22,6 +22,7 @@ export const auditTargetTypeEnum = pgEnum("audit_target_type", [
 	"event",
 	"membership",
 	"guest",
+	"gift",
 	"invite",
 	"system",
 ]);
