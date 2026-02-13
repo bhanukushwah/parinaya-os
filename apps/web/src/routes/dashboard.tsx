@@ -93,6 +93,20 @@ function RouteComponent() {
 				</article>
 
 				<article className="rounded-lg border p-4">
+					<h2 className="font-semibold text-lg">Gifts Controls</h2>
+					<p className="mt-1 text-muted-foreground text-sm">
+						Prepare UPI and wishlist gifting details, then publish/hide/disable
+						with explicit safeguards.
+					</p>
+					<Link
+						className="mt-4 inline-flex font-medium text-sm underline"
+						to="/dashboard/gifts"
+					>
+						Open gifts dashboard
+					</Link>
+				</article>
+
+				<article className="rounded-lg border p-4">
 					<h2 className="font-semibold text-lg">Import Pipeline</h2>
 					<p className="mt-1 text-muted-foreground text-sm">
 						Launch CSV, contacts, and manual-row imports and inspect warning

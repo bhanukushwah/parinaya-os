@@ -18,6 +18,7 @@ import { Route as DashboardOperationsRouteImport } from './routes/dashboard.oper
 import { Route as DashboardInvitesRouteImport } from './routes/dashboard.invites'
 import { Route as DashboardImportsRouteImport } from './routes/dashboard.imports'
 import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
+import { Route as DashboardGiftsRouteImport } from './routes/dashboard.gifts'
 import { Route as DashboardEventsRouteImport } from './routes/dashboard.events'
 import { Route as DashboardAuditRouteImport } from './routes/dashboard.audit'
 import { Route as SiteWeddingSlugVerifyRouteImport } from './routes/site.$weddingSlug.verify'
@@ -69,6 +70,11 @@ const DashboardGuestsRoute = DashboardGuestsRouteImport.update({
   path: '/guests',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardGiftsRoute = DashboardGiftsRouteImport.update({
+  id: '/gifts',
+  path: '/gifts',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardEventsRoute = DashboardEventsRouteImport.update({
   id: '/events',
   path: '/events',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/dashboard/audit': typeof DashboardAuditRoute
   '/dashboard/events': typeof DashboardEventsRouteWithChildren
+  '/dashboard/gifts': typeof DashboardGiftsRoute
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/dashboard/audit': typeof DashboardAuditRoute
   '/dashboard/events': typeof DashboardEventsRouteWithChildren
+  '/dashboard/gifts': typeof DashboardGiftsRoute
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/dashboard/audit': typeof DashboardAuditRoute
   '/dashboard/events': typeof DashboardEventsRouteWithChildren
+  '/dashboard/gifts': typeof DashboardGiftsRoute
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/audit'
     | '/dashboard/events'
+    | '/dashboard/gifts'
     | '/dashboard/guests'
     | '/dashboard/imports'
     | '/dashboard/invites'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/audit'
     | '/dashboard/events'
+    | '/dashboard/gifts'
     | '/dashboard/guests'
     | '/dashboard/imports'
     | '/dashboard/invites'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/dashboard/audit'
     | '/dashboard/events'
+    | '/dashboard/gifts'
     | '/dashboard/guests'
     | '/dashboard/imports'
     | '/dashboard/invites'
@@ -269,6 +281,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardGuestsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/gifts': {
+      id: '/dashboard/gifts'
+      path: '/gifts'
+      fullPath: '/dashboard/gifts'
+      preLoaderRoute: typeof DashboardGiftsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/events': {
       id: '/dashboard/events'
       path: '/events'
@@ -333,6 +352,7 @@ const DashboardInvitesRouteWithChildren =
 interface DashboardRouteChildren {
   DashboardAuditRoute: typeof DashboardAuditRoute
   DashboardEventsRoute: typeof DashboardEventsRouteWithChildren
+  DashboardGiftsRoute: typeof DashboardGiftsRoute
   DashboardGuestsRoute: typeof DashboardGuestsRoute
   DashboardImportsRoute: typeof DashboardImportsRoute
   DashboardInvitesRoute: typeof DashboardInvitesRouteWithChildren
@@ -342,6 +362,7 @@ interface DashboardRouteChildren {
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAuditRoute: DashboardAuditRoute,
   DashboardEventsRoute: DashboardEventsRouteWithChildren,
+  DashboardGiftsRoute: DashboardGiftsRoute,
   DashboardGuestsRoute: DashboardGuestsRoute,
   DashboardImportsRoute: DashboardImportsRoute,
   DashboardInvitesRoute: DashboardInvitesRouteWithChildren,
