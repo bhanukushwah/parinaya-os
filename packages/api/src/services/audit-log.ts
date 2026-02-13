@@ -9,6 +9,8 @@ export const AUDIT_ACTIONS = {
 	EVENT_RESTORE: "event.restore",
 	EVENT_VISIBILITY_CHANGE: "event.visibility.change",
 	GUEST_EDIT: "guest.edit",
+	GUEST_IMPORT_STARTED: "guest.import.started",
+	GUEST_IMPORT_COMPLETED: "guest.import.completed",
 	INVITE_SEND: "invite.send",
 	ROLE_CHANGE: "role.change",
 } as const;
