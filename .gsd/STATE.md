@@ -3,9 +3,9 @@
 ## Current Position
 
 - Phase: 1 (complete)
-- Plan: 01-04 complete
-- Status: Phase 1 complete; verification passed for multi-event foundation and governance controls
-- Last activity: 2026-02-13 — Finalized Phase 1 execution metadata after verification pass
+- Plan: 02-01 complete (Phase 2 in progress)
+- Status: Phase 2 started; guest/import/audience database foundation is migration-backed
+- Last activity: 2026-02-13 — Executed 02-01 guest model/import pipeline schema plan
 
 ## Accumulated Context
 
@@ -33,4 +33,9 @@
 - Verification note (01-03): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed; `apps/web` typecheck is currently blocked by pre-existing route-tree generation/type wiring issues (`routeTree.gen` missing and route literal generic mismatches).
 - Verification note (01-04): `apps/web` typecheck passes after route generation; workspace `bun run check-types` is still blocked by pre-existing `apps/server/src/index.ts` `TS6133`.
 - Verification result (phase): `.gsd/phases/01-multi-event-foundation-governance-controls/01-VERIFICATION.md` passed.
-- Next execution point: Phase 2 planning (`/plan-phase.md 2`).
+- Phase 2 database primitives now exist in `packages/db/src/schema/guests.ts` for identities, people, guest units, memberships, tags, event audience selection overrides, import runs, and import rows.
+- Deterministic phone identity constraints are now enforced via workspace-scoped unique normalized phone index and active-target related indexes in generated migrations.
+- Import telemetry schema now persists row outcomes (`created|updated|reactivated|warning_malformed_phone|skipped_no_phone`) and row inviteability state for warning visibility without data loss.
+- Migration artifacts for phase-02 schema are now generated at `packages/db/src/migrations/0001_wooden_speed_demon.sql` and `packages/db/src/migrations/0002_parched_triathlon.sql` with updated metadata snapshots.
+- Verification note (02-01): `bun run db:generate` and `bunx tsc --noEmit -p packages/db/tsconfig.json` passed; known workspace blocker remains `apps/server/src/index.ts` `TS6133` (pre-existing, unchanged).
+- Next execution point: Phase 2 plan 02-02 execution.
