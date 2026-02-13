@@ -287,6 +287,28 @@ export function sortOperationsRows(rows: OperationsDatasetRow[]) {
 	});
 }
 
+export function computeOperationsDataAsOf(
+	rows: Array<{ updatedAt: Date }>,
+): Date | null {
+	if (rows.length === 0) {
+		return null;
+	}
+
+	const firstRow = rows.at(0);
+	if (!firstRow) {
+		return null;
+	}
+
+	let latest = firstRow.updatedAt;
+	for (const row of rows) {
+		if (row.updatedAt.getTime() > latest.getTime()) {
+			latest = row.updatedAt;
+		}
+	}
+
+	return latest;
+}
+
 async function getLatestInviteByEventUnit(input: {
 	weddingId: string;
 	eventId: string | "all";
@@ -588,15 +610,7 @@ export async function getOperationsDataset(input: {
 		return passRsvpFilter(row.rsvpStatus, input.filters.rsvpStatus);
 	});
 
-	const dataAsOf = filteredRowsWithMeta.reduce<Date | null>(
-		(latest, current) => {
-			if (!latest || current.updatedAt.getTime() > latest.getTime()) {
-				return current.updatedAt;
-			}
-			return latest;
-		},
-		null,
-	);
+	const dataAsOf = computeOperationsDataAsOf(filteredRowsWithMeta);
 
 	const rows = sortOperationsRows(
 		filteredRowsWithMeta.map((entry) => entry.row),
