@@ -1,121 +1,96 @@
-# Feature Research
+# Feature Research - Milestone v1.0 Core Wedding OS
 
-**Domain:** WhatsApp-first wedding coordination platform in India
+**Product:** ParinayaOS
+**Domain:** Indian WhatsApp-first wedding operations
 **Researched:** 2026-02-13
 **Confidence:** HIGH
 
-## Feature Landscape
+## Scope Lens For This Milestone
 
-### Table Stakes (Users Expect These)
+This document scopes only the wedding-domain capabilities listed in `.gsd/PROJECT.md` under **Current Milestone: v1.0 Core Wedding OS**. Foundation/auth/runtime are treated as already validated inputs.
 
-Features expected for a credible India wedding coordination product. Missing these creates immediate trust and usability failure for Parent Admin + Family Coordinator workflows.
+## Table Stakes
 
-| Feature | Why Expected | Complexity | Key Dependencies | v1/v2 Behavior Expectation |
+Missing any of these breaks basic operational reliability for Parent Admins and Family Coordinators.
+
+| Feature area | Why table stake in India | Complexity | Key dependency notes | Requirement-scoping guidance |
 | --- | --- | --- | --- | --- |
-| Multi-event wedding management (5-10+ events) | Indian weddings are inherently multi-function; single-event tools are unusable | MEDIUM | Wedding + Event models, ordering, event visibility rules | v1: create/edit/reorder events with public/invite-only flags; v2: richer defaults/templates + higher scale handling |
-| Family-centric guest model (GuestUnit + People) | Invitations and RSVPs are household-first, not purely individual | HIGH | Person normalization (phone), GuestUnit membership, invite mapping | v1: invite ungrouped people as unit-of-one; v2: smoother merge/split conflict handling |
-| Fast guest import + deterministic dedupe | Operators begin from phone contacts/CSV, not manual entry | HIGH | Google Contacts integration, CSV parser, E.164 normalization, duplicate merge rules | v1: Google + CSV + manual, phone-number dedupe; v2: stronger bulk cleanup and merge ergonomics |
-| Event-wise audience selection + bulk invite actions | Not all guests attend all events; must support side/tag/search filtering | MEDIUM | Tags/sides taxonomy, Invitation state model, fast list ops | v1: filter + bulk select + counts; v2: smarter defaults and saved audiences |
-| WhatsApp RSVP capture with zero login | WhatsApp is the practical guest UI in this market | HIGH | Meta Cloud API templates, webhook ingestion, status tracking, consent enforcement | v1: <=3 interaction RSVP, fallback parsing, DND support; v2: better reminder automation within policy |
-| Parent-first dashboard + CSV exports | Core value is operational clarity (counts, pending, vendor sheets) | MEDIUM | Aggregation queries, RSVP confidence logic, export pipeline | v1: per-event counts + pending + vendor-ready exports; v2: improved operational views and prioritization |
-| Lightweight wedding website synced to event source-of-truth | Families need one shareable link with always-current details | MEDIUM | Website config, event publish states, privacy/token gating | v1: publishable itinerary + WhatsApp CTA; v2: improved personalization without builder complexity |
-| Gifts/registry (UPI/link-first, non-payment) | Gift expectations exist; India behavior is UPI/link oriented | MEDIUM | Gift config model, media storage for QR, role permissions/audit | v1: blessings/UPI/links; v2: optional reservation improvements |
-| Role-based collaboration + critical audit logs | Multiple family operators edit live data; traceability is required | HIGH | Auth roles, authorization guards, audit event pipeline | v1: Owner/Admin/Side Admin/Viewer with critical edit logs; v2: tighter side-scoped controls + review workflows |
+| Multi-event operations (5-10+ events, ordering, visibility, auditability) | Indian weddings are multi-function by default (Haldi/Sangeet/Wedding/Reception etc.) | MEDIUM | Depends on Event model, sort order persistence, visibility flags, audit events | v1 must support create/edit/reorder + public vs invite-only; keep templates minimal and deterministic |
+| Guest core: People + GuestUnit (family-first) | Invite and RSVP behavior is household-first, not individual-first | HIGH | Depends on `Person` with canonical phone, `GuestUnit` membership rules, primary recipient selection | v1 should allow unit-of-one invites; do not block send flow for incomplete grouping |
+| High-speed onboarding (Google Contacts, CSV, manual/phone input) with deterministic dedupe | Real operators start from messy contacts and need speed over perfection | HIGH | Depends on E.164 normalization, duplicate merge policy, source attribution, bulk edits | v1 success gate: import 300+ contacts quickly and safely; prioritize deterministic phone dedupe over fuzzy matching |
+| Event-wise audience selection + bulk invite actions | Different sides/tags attend different functions | MEDIUM | Depends on side/tag taxonomy, invitation mapping table, fast filter + bulk selection UX | v1 should include side/tag/search filters and explicit selected-count feedback before send |
+| WhatsApp core loop: Cloud API invites, RSVP capture, webhook/status tracking, compliance controls | WhatsApp is the actual guest interface in India | HIGH | Depends on template lifecycle, webhook idempotency, opt-in + 24h policy handling, DND/STOP enforcement | v1 must ship reliable send->status->reply loop with numeric fallback parsing and audit trails |
+| Parent operations dashboard + vendor-ready CSV exports | Parents need answers in seconds, not dashboards in theory | MEDIUM | Depends on RSVP state model, aggregate queries, export schema stability | v1 should optimize for three tasks: reception count, pending RSVPs, export for vendor calls |
+| Lightweight wedding website sync + WhatsApp RSVP CTA | Families need one link that stays current under change | MEDIUM | Depends on publish state, event visibility mapping, tokenized invite-only access | v1 should be auto-generated and low bandwidth; no theme-builder surface |
+| Gifts modes (Blessings/UPI/links) + controls | India gifting often uses UPI/link-first behavior | MEDIUM | Depends on GiftConfig, QR/media handling, role guard, audit logging | v1 should avoid payment rails entirely; keep owner-controlled edits by default |
+| Role-based collaboration + critical audit logs | Multi-family operators need accountability and safe delegation | HIGH | Depends on Better Auth role projection, server authorization checks, append-only audit entries | v1 should lock critical edits (event time, RSVP override, gifts) behind scoped roles and log all changes |
 
-### Differentiators (Competitive Advantage)
+## Differentiators
 
-Features that materially separate ParinayaOS from generic wedding platforms and directly reinforce the India-specific operating model.
+These are the highest-leverage capabilities that make ParinayaOS distinctly Indian and WhatsApp-native.
 
-| Feature | Value Proposition | Complexity | Key Dependencies | Why It Differentiates |
+| Feature area | Strategic value | Complexity | Key dependency notes | Requirement-scoping guidance |
 | --- | --- | --- | --- | --- |
-| Household-first RSVP with uncertain count support (bucket + confidence) | Matches real RSVP behavior before final confirmations | HIGH | GuestUnit model, RSVP confidence states, aggregation math | Competing global tools optimize for precise individual RSVP too early |
-| Zero-login WhatsApp-native RSVP flow with policy-aware fallback | Converts higher response in actual user channel while staying compliant | HIGH | Interactive templates, webhook parser, numeric fallback interpreter, DND controls | Practical execution of WhatsApp-first promise, not just link-sharing |
-| Import-now, clean-later workflow (Saved As vs Invite Name + bulk cleanup) | Dramatically reduces setup friction for 300+ contact weddings | MEDIUM | Dual-name schema, inline editing UX, normalization utilities | Most tools assume clean data upfront; this embraces messy contact reality |
-| Private/public event visibility across WhatsApp and website | Handles different invite audiences across multi-event weddings | HIGH | Event visibility rules, personalized token links, invite mapping | Critical for Indian multi-function guest segmentation, often weak in competitors |
-| Parent-operational UX (one-tap counts/pending/export) | Delivers decisions-in-seconds for the real operators | MEDIUM | Fast aggregations, mobile-first IA, prefiltered exports | Strongly aligned to Parent Admin utility instead of couple-centric design-first UX |
-| Gifts safety model (owner-only edits + audit + optional lock) | Reduces trust/fraud anxiety around editable gift details | MEDIUM | Role system, audit log, gift lock state | Region-appropriate gift handling without entering payments risk |
+| Household-first RSVP with uncertain-count support (bucket + confidence) | Mirrors real RSVP reality before final numbers settle | HIGH | Depends on GuestUnit RSVP model, count bucket + optional exact count, confidence field | v1 should support Estimated vs Confirmed and compute expected range per event |
+| Zero-login WhatsApp RSVP in <=3 interactions | Converts better for elders and family groups than web forms | HIGH | Depends on interactive templates, reply parser, language-safe copy, webhook latency | v1 should optimize tap/tap/tap flow and fallback numeric replies (1/2/3/4/5+) |
+| Import-now clean-later workflow (`saved_as_name` vs `invite_name`) | Cuts setup friction for large weddings with messy contact books | MEDIUM | Depends on dual-name fields, inline list editing, bulk cleanup actions | v1 should make invite name editing optional but quick; do not force pre-send cleanup |
+| Private/public event visibility across website + invite links | Supports segmented audience operations across events | HIGH | Depends on event visibility policy, invite token resolution, website rendering guards | v1 should enforce invite-only events never leak on public link |
+| Parent-first operational UX (counts/pending/export first) | Aligns product with who actually runs logistics | MEDIUM | Depends on task-centric IA, fast mobile list performance, high-contrast/low-cognitive controls | v1 requirements should prioritize decision actions over cosmetic analytics |
+| Gifts trust/safety model (owner-only edits + audit + optional lock) | Reduces scam anxiety around editable payout details | MEDIUM | Depends on permission matrix, audit history, optional lock state near wedding date | v1 should include ownership guardrails before adding advanced registry depth |
 
-### Anti-Features (Commonly Requested, Often Problematic)
+## Anti-Features
 
-Features that appear attractive but conflict with domain reality, v1/v2 delivery constraints, or core product behavior.
+These are common requests that would dilute milestone outcomes or create avoidable risk.
 
-| Anti-Feature | Why Requested | Why Problematic | Better Alternative |
-| --- | --- | --- | --- |
-| Full wedding website theme builder | Couples want visual uniqueness | Pulls product into design tooling, slows core coordination loop, increases support burden | Keep auto-generated site with minimal customization and strong content freshness |
-| In-app payment collection/escrow for gifts | Seems like monetization and convenience | Regulatory/compliance complexity, fraud exposure, support overhead outside core coordination | UPI/link-first gifting with clear off-platform payment responsibility |
-| Email-first invitation + RSVP stack | Familiar from global products | Low adoption for Indian family workflows; weakens WhatsApp-first conversion | WhatsApp-first outbound + optional web fallback |
-| Mandatory perfect family grouping before invites | Feels "clean data" upfront | Blocks urgent sending, increases abandonment during setup | Allow unit-of-one invites; progressively improve grouping later |
-| Dense per-guest meal/seating planner in core flow | Common wedding-planner request | High complexity, low v1 leverage, distracts from guest/event reliability | Defer to post-v2 modules after core coordination PMF |
-| Open edit rights for all collaborators | Reduces perceived bottlenecks | Causes accidental/bad edits to events/gifts, destroys trust in source-of-truth | Role-based permissions + audit + restricted critical actions |
-| Real-time custom chat inside product | "All-in-one" narrative appeal | Reinvents WhatsApp behavior poorly; heavy moderation/storage cost | Use WhatsApp for communication, product for operational state and exports |
+| Anti-feature area | Why requested | Complexity trap | Key dependency/risk notes | v1 alternative |
+| --- | --- | --- | --- | --- |
+| Full website theme builder | Couples want visual uniqueness | HIGH | Pulls engineering into template engines, asset pipelines, design tooling support | Keep auto-generated website with minimal branding controls |
+| In-app gift payments/escrow | Feels convenient and monetizable | VERY HIGH | Payment compliance, fraud risk, dispute workflows, reconciliation overhead | UPI/link-first gifting with explicit off-platform payment responsibility |
+| Email-first invite + RSVP channel | Familiar from global tools | MEDIUM | Splits delivery state and weakens WhatsApp response loop quality | Keep WhatsApp primary, optional tokenized web fallback only |
+| Mandatory perfect family grouping before send | Appeals to data-purity mindset | HIGH | Blocks urgent operations and increases setup abandonment | Allow unit-of-one invites and progressive grouping |
+| Dense seating and meal-planning core module | Common wedding software expectation | HIGH | Adds heavy data model + UI complexity unrelated to core milestone promise | Defer beyond v1 until coordination OS is stable |
+| Open edit permissions for all collaborators | Feels faster in short term | MEDIUM | High accidental-change risk, weak accountability, trust erosion | Keep scoped roles + audit log for critical surfaces |
+| In-app chat replacing WhatsApp | "All-in-one" aspiration | VERY HIGH | Rebuilds chat infrastructure without clear user adoption upside | Use WhatsApp for conversation; keep ParinayaOS as system-of-record |
 
-## Feature Dependencies
+## Cross-Feature Dependency Map
 
 ```text
 [Phone normalization + dedupe]
-  └──requires──> [People import (Google/CSV/manual)]
-  └──enables──>  [GuestUnit membership]
+  -> enables [People import quality]
+  -> enables [GuestUnit integrity]
 
-[GuestUnit membership]
-  └──requires──> [Person model with E.164 phone]
-  └──enables──>  [Event-wise invitation mapping]
+[GuestUnit integrity]
+  -> enables [Event-wise invitations]
+  -> enables [Household RSVP aggregation]
 
-[Event-wise invitation mapping]
-  └──requires──> [Multi-event management]
-  └──enables──>  [WhatsApp messaging + RSVP capture]
+[Event-wise invitations]
+  -> enables [WhatsApp send orchestration]
+  -> enables [Website invite-only visibility]
 
-[WhatsApp messaging + RSVP capture]
-  └──requires──> [Template management + opt-in policy handling]
-  └──requires──> [Webhook ingestion + status processing]
-  └──enables──>  [Dashboard counts + pending lists]
+[WhatsApp send orchestration + webhooks]
+  -> enables [Live RSVP + status tracking]
+  -> enables [Parent dashboard reliability]
 
-[Dashboard counts + exports]
-  └──requires──> [RSVP state + confidence model]
-  └──requires──> [Fast aggregate queries]
+[RSVP model (status/count/confidence)]
+  -> enables [Headcount ranges]
+  -> enables [Vendor export correctness]
 
-[Website publish + visibility]
-  └──requires──> [Event visibility flags]
-  └──requires──> [Tokenized invite-only access]
-  └──enhances──> [WhatsApp invite CTA conversion]
-
-[Gifts config]
-  └──requires──> [Role permissions + audit logging]
-
-[Role-based collaboration]
-  └──requires──> [Auth + org role model]
-  └──protects──> [Events, RSVP overrides, gifts]
-
-[Theme builder ambitions]
-  └──conflicts──> [Lightweight parent-friendly UX + fast publish]
-
-[In-app payments]
-  └──conflicts──> [Non-payment product boundary + low compliance overhead]
+[Role/permission model + audit logs]
+  -> protects [Events, RSVP overrides, GiftConfig]
 ```
 
-### Dependency Notes
+## Requirement Scoping Cuts (Actionable)
 
-- **Phone normalization is foundational:** dedupe and merge integrity depend on canonical phone identity (E.164), otherwise RSVP and messaging states drift.
-- **GuestUnit before invitation orchestration:** household-level RSVP and event targeting both rely on stable invitation units.
-- **WhatsApp reliability needs policy + webhook layers together:** sending without consent/window handling or receipt tracking creates legal and operational failure.
-- **Dashboard quality is downstream of RSVP model quality:** confidence/range outputs are only useful if RSVP and merge rules are deterministic.
-- **Website privacy correctness depends on invitation mapping:** invite-only events require tokenized linkage to selected audiences.
-- **Gifts safety is not standalone:** gift features without role restrictions and audit logs create social trust and fraud risk.
-
-## v1 vs v2 Capability Expectations
-
-### v1 (Must deliver product promise)
-
-- Multi-event setup, family-centric guest model, import + dedupe, event-wise invites, WhatsApp RSVP with fallback, parent dashboard + exports, lightweight website publish, gifts basics, role/audit baseline.
-
-### v2 (Depth and scale enhancements)
-
-- Better merge/split conflict resolution, smarter invite defaults and saved audience segments, stronger reminder orchestration under WhatsApp policy, richer operational prioritization views, improved token/privacy controls, safer gifts lock/review workflows.
+- Must-have v1 slice: multi-event + guest model + import/dedupe + event-wise invites + WhatsApp RSVP loop + parent dashboard/exports + lightweight website + gifts basics + roles/audit.
+- Quality gates to encode in requirements: deterministic phone dedupe, <=3-step WhatsApp RSVP, dashboard update within seconds after webhook, and no invite-only event leakage on public website links.
+- Complexity containment: avoid fuzzy dedupe, avoid custom chat, avoid payment rails, avoid theme-builder and seating modules in v1 requirement set.
+- Sequencing guidance: lock data model and invitation mapping before WhatsApp orchestration; ship role/audit guardrails before enabling collaborative critical edits.
 
 ## Sources
 
-- `.gsd/PROJECT.md` - validated constraints, active requirements, and out-of-scope boundaries.
-- `docs/PRD.md` - detailed feature requirements, acceptance criteria, user journeys, and India-specific operating assumptions.
+- `.gsd/PROJECT.md` - milestone goal, active requirements, constraints, and out-of-scope boundaries.
+- `docs/PRD.md` - India-specific workflows, acceptance criteria, and WhatsApp policy constraints.
 
 ---
-*Feature research for: WhatsApp-first wedding coordination platform in India*
+*Feature research for: ParinayaOS v1.0 Core Wedding OS*
 *Researched: 2026-02-13*

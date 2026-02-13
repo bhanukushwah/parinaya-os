@@ -1,258 +1,32 @@
-# Pitfalls Research
+# Pitfalls Research - ParinayaOS v1.0 Core Wedding OS
 
-**Domain:** WhatsApp-first, family-centric wedding coordination in India (brownfield expansion)
+**Scope:** Brownfield wedding-domain expansion with WhatsApp-first operations at real wedding scale (1000+ guests, 8-10 events).
 **Researched:** 2026-02-13
-**Confidence:** HIGH
+**Use:** Roadmap input for phase-level risk prevention.
 
-## Critical Pitfalls
+## Roadmap-Critical Pitfalls
 
-### Pitfall 1: Breaking RSVP history when retrofitting People -> GuestUnit
-
-**What goes wrong:**
-Teams add GuestUnit support on top of an existing person-centric model, then merges/splits overwrite historical RSVP and invitation state.
-
-**Why it happens:**
-Identity boundaries are unclear during migration; RSVP rows are rewritten instead of versioned/relinked with deterministic rules.
-
-**How to avoid:**
-Define canonical identity rules first (`Person`, `GuestUnit`, `UnitMember`, `Invitation`, `RSVP`), write merge/split conflict policy before UI, and run backfill with reversible migration scripts and audit events.
-
-**Warning signs:**
-- Same guest shows different RSVP counts across dashboard vs export
-- Merge actions silently change old event counts
-- Support asks "which record is source of truth?"
-
-**Phase to address:**
-Phase 1 - Data foundation and migration safety
-
----
-
-### Pitfall 2: Non-idempotent WhatsApp webhook ingestion
-
-**What goes wrong:**
-Duplicate, delayed, or out-of-order delivery/reply webhooks create phantom states (e.g., message marked unread after read, RSVP processed twice).
-
-**Why it happens:**
-Cloud API webhooks are treated as exactly-once, and handlers mutate state directly without dedupe keys/version checks.
-
-**How to avoid:**
-Use idempotency keys from message IDs, append-only raw event store, monotonic status transitions, and retry-safe processors with dead-letter handling.
-
-**Warning signs:**
-- Reprocessing the same payload changes business state
-- Sudden spikes in duplicate RSVP updates
-- "Impossible" status transitions in logs
-
-**Phase to address:**
-Phase 4 - WhatsApp messaging + webhook pipeline
-
----
-
-### Pitfall 3: Policy-unsafe messaging flows (opt-in, 24-hour window, DNM)
-
-**What goes wrong:**
-Invites/reminders are sent outside allowed template/service windows or to opted-out numbers, creating compliance and account risk.
-
-**Why it happens:**
-Product flow is built for convenience first; policy checks are added late as UI hints instead of send-time enforcement.
-
-**How to avoid:**
-Enforce policy in server-side send gate: opt-in state, conversation window, approved template mapping, and hard Do-Not-Message block with audit trail.
-
-**Warning signs:**
-- Manual "please ignore" fixes in operations channel
-- STOP requests visible in chat but not enforced in sends
-- Messaging failures concentrated on template/window errors
-
-**Phase to address:**
-Phase 4 - WhatsApp messaging + compliance controls
-
----
-
-### Pitfall 4: Phone normalization drift across import channels
-
-**What goes wrong:**
-Google/CSV/manual imports create duplicate people for one real number, or worse, merge different people incorrectly.
-
-**Why it happens:**
-Each import path applies different normalization; dedupe is done after insert or by name+phone heuristics.
-
-**How to avoid:**
-Create one shared normalization pipeline (E.164 + country defaults + validation), dedupe on canonical phone hash, and require explicit merge UI for conflicts.
-
-**Warning signs:**
-- Duplicate rate grows with each import batch
-- Bulk invite count differs from unique reachable phone count
-- Operators stop trusting one-tap merge
-
-**Phase to address:**
-Phase 2 - Contact import + guest model
-
----
-
-### Pitfall 5: Slow bulk audience operations at real wedding scale
-
-**What goes wrong:**
-Selection/invite/export flows work in dev but collapse with 1000+ guests and 8-10 events.
-
-**Why it happens:**
-N+1 queries, row-by-row updates, and unindexed filter dimensions (side/tags/status/event).
-
-**How to avoid:**
-Design for set-based mutations, async job queue for heavy actions, list virtualization, and DB indexes aligned to filter/sort patterns from day one.
-
-**Warning signs:**
-- "Invite 200 units" takes >10s
-- Mobile browser freezes on filtered lists
-- Export generation blocks request thread
-
-**Phase to address:**
-Phase 3 and Phase 7 - Audience operations + dashboard/export performance
-
----
-
-### Pitfall 6: Authorization leakage in side-scoped collaboration
-
-**What goes wrong:**
-Side Admins accidentally see or edit opposite-side data through unscoped RPC procedures or shared list endpoints.
-
-**Why it happens:**
-Brownfield auth checks are route-level only; new wedding-domain scoping is not embedded in query layer and export endpoints.
-
-**How to avoid:**
-Implement domain authorization matrix (`Owner/Admin/Side Admin/Viewer`) in server policy layer, enforce row-level filters in every read/write/export, and add negative tests.
-
-**Warning signs:**
-- Same request returns different sides when query params change
-- Side Admin can export all guests via CSV endpoint
-- Permission checks duplicated inconsistently per handler
-
-**Phase to address:**
-Phase 8 - Roles, permissions, and security hardening
-
----
-
-### Pitfall 7: Privacy leaks via personalized website links/tokens
-
-**What goes wrong:**
-Invite-only events become publicly accessible through guessable tokens, referrer leaks, or shared links without token binding.
-
-**Why it happens:**
-Website is treated as static public content while adding private event visibility as a late conditional.
-
-**How to avoid:**
-Use high-entropy signed tokens with expiry/rotation, strict token-to-GuestUnit binding, referrer-safe CTA handling, and cache controls for private pages.
-
-**Warning signs:**
-- Access logs show multiple units using same token unexpectedly
-- Private events indexed/shared outside intended audience
-- "Public link" and "invite-only link" return similar payloads
-
-**Phase to address:**
-Phase 6 - Website privacy and tokenized access
-
----
-
-### Pitfall 8: Dashboard/website/message-state drift (multiple truths)
-
-**What goes wrong:**
-Counts on dashboard, website schedule, and message logs disagree after edits/retries, forcing families back to spreadsheets.
-
-**Why it happens:**
-Separate read models are updated inconsistently; no reconciliation jobs or freshness markers.
-
-**How to avoid:**
-Define one canonical write model, asynchronous projections with replay capability, reconciliation jobs, and "last updated" metadata surfaced to users.
-
-**Warning signs:**
-- Parent asks why export and tile count differ
-- Event edit appears on website but not invite preview
-- Frequent manual recounts before vendor sharing
-
-**Phase to address:**
-Phase 5 and Phase 7 - RSVP consistency + reporting reliability
-
----
-
-### Pitfall 9: Audit logs added too late to be useful
-
-**What goes wrong:**
-Critical changes (event time edits, RSVP overrides, gift config changes) lack actor/before-after context when disputes happen.
-
-**Why it happens:**
-Audit is deferred as a "compliance enhancement" after core features ship.
-
-**How to avoid:**
-Add append-only audit events with actor, timestamp, before/after snapshot, reason code, and UI surfacing in every critical workflow from first implementation.
-
-**Warning signs:**
-- Logs show only "updated_at" without who/what
-- Team cannot reconstruct why headcount changed
-- Gift/UPI edits cannot be traced to a user
-
-**Phase to address:**
-Phase 1 and Phase 8 - Event model instrumentation + governance
-
----
-
-### Pitfall 10: RSVP parser brittle to real WhatsApp behavior
-
-**What goes wrong:**
-Structured flows work in demo, but real guests reply in mixed language/format, causing dropped or wrong RSVP updates.
-
-**Why it happens:**
-Parser assumes button/list-only responses and English numeric patterns.
-
-**How to avoid:**
-Build tolerant parser with confidence scoring, support common free-text variants (including Hinglish patterns), and route low-confidence replies to human-review queue.
-
-**Warning signs:**
-- High share of "unrecognized response" events
-- Families manually correcting RSVP frequently
-- Parser accuracy drops during high-volume invite windows
-
-**Phase to address:**
-Phase 5 - RSVP engine and fallback handling
-
-## Integration Gotchas
-
-| Integration | Common mistake | Correct approach |
-| --- | --- | --- |
-| WhatsApp Cloud API | Treating webhooks as ordered/exactly-once | Idempotent consumers + state machine transitions |
-| WhatsApp templates | Designing UX around free-form sends only | Template inventory mapped to journey/state |
-| Google Contacts API | Assuming long-lived sync token and complete contact fields | Paginated fetch + token expiry handling + partial data tolerance |
-| CSV import | Import-time schema looseness with silent coercion | Strict validation report + per-row error feedback |
-
-## Performance Traps
-
-| Trap | Symptoms | Prevention | When it breaks |
+| Pitfall | Warning signs | Prevention strategy | Phase to address |
 | --- | --- | --- | --- |
-| Row-by-row invite writes | Slow bulk invite, DB saturation | Batch writes + queue workers | 200+ units per action |
-| Unindexed RSVP filters | Dashboard lag on parent queries | Composite indexes by wedding/event/status/side | 50k+ RSVP rows |
-| Recomputing counts on request | Export/timeouts during peak | Materialized projections + incremental refresh | 8-10 events, 1000+ guests |
+| **Identity and dedupe correctness fails across import channels** | Duplicate people keep increasing after each import; invite count differs from unique reachable numbers; merges frequently need manual rollback | Enforce one canonical phone normalization pipeline (E.164 + country defaults), dedupe before write using deterministic identity keys, and require explicit merge workflows with audit trail | **Phase 2 - Guest model + imports** |
+| **People -> GuestUnit migration corrupts historical RSVP state** | Historical event totals change after merge/split; old exports no longer match prior snapshots; support cannot identify source-of-truth row | Define immutable identity boundaries (`Person`, `GuestUnit`, membership, invitation, RSVP) before UI work, use versioned relinking rules, and run reversible backfills with simulation checks | **Phase 1 - Data foundation** |
+| **WhatsApp policy non-compliance (opt-in, 24h window, DNM)** | Template/window errors spike; STOP/DNM contacts still receive reminders; ops team relies on manual suppression lists | Implement server-side send gate that hard-blocks non-compliant sends, with opt-in state model, conversation-window checks, approved-template mapping, and auditable reject reasons | **Phase 4 - WhatsApp compliance controls** |
+| **Webhook ingestion is non-idempotent and order-sensitive** | Replay of same payload changes state; duplicate RSVP updates appear; message statuses move backward (read -> sent) | Store raw events append-only, dedupe by provider message/event IDs, enforce monotonic status transitions, and process via retry-safe workers + dead-letter queue | **Phase 4 - Messaging pipeline reliability** |
+| **Role leakage in side-scoped collaboration** | Side Admin can export all guests; API response scope changes with crafted params; permission checks differ by endpoint | Centralize authorization matrix (`Owner/Admin/Side Admin/Viewer`) in policy layer, apply row-level scoping to read/write/export, and add negative auth tests for all role-scope combinations | **Phase 8 - Roles and security hardening** |
+| **Projection drift across dashboard, website, and exports** | Website schedule differs from dashboard; export totals mismatch tiles; users perform manual recount before sharing with vendors | Keep one canonical write model, build async projections with replay/rebuild support, run scheduled reconciliation jobs, and expose freshness/version markers in UI | **Phase 5 + Phase 7 - RSVP/reporting consistency** |
+| **Bulk operations collapse at wedding scale** | Invite 200+ units takes >10s; list interactions freeze on mobile; export jobs timeout under peak load | Use set-based DB mutations, queue heavy fan-out tasks, add indexes for side/tag/status/event filters, and enforce performance SLOs with scale fixtures in CI | **Phase 3 + Phase 7 - Audience operations + reporting performance** |
+| **Website privacy boundaries are bypassed** | Private events accessible through shared links; multiple units use same token; invite-only payload appears in public response paths | Use high-entropy signed tokens bound to GuestUnit and scope, add expiry/rotation, disable cache for private payloads, and run abuse tests for token replay/link sharing | **Phase 6 - Website privacy and access control** |
+| **RSVP parser fails on real-world WhatsApp replies** | High unrecognized-reply rate; manual RSVP correction load grows during invite peaks; free-text replies are dropped silently | Support mixed-format reply parsing (buttons + free text), add confidence scoring and human-review queue, and track parser precision/recall with language variants | **Phase 5 - RSVP capture robustness** |
 
-## Pitfall-to-Phase Mapping
+## Phase Gating Checks (Roadmap-Ready)
 
-| Pitfall | Prevention phase | Verification |
-| --- | --- | --- |
-| RSVP history corruption | Phase 1 | Merge/split simulation keeps historical totals stable |
-| Webhook duplication/order issues | Phase 4 | Replay same/out-of-order payloads without state corruption |
-| Policy-unsafe sends | Phase 4 | Send gate blocks non-compliant messages with auditable reason |
-| Import dedupe drift | Phase 2 | Cross-source import test yields deterministic unique people |
-| Bulk operation slowness | Phase 3/7 | 1000-guest benchmark meets invite/export SLA |
-| Side-role data leakage | Phase 8 | Negative authorization tests pass for all role/scope combos |
-| Website privacy leak | Phase 6 | Token abuse tests fail closed; private events never exposed |
-| Cross-surface state drift | Phase 5/7 | Reconciliation job reports zero unresolved divergence |
-| Missing auditability | Phase 1/8 | Critical edits include actor + before/after in audit view |
-| Fragile free-text RSVP parsing | Phase 5 | Parser confidence and manual-review fallback hit target |
+- **Phase 2 gate:** Cross-source import replay yields stable unique identity count and zero silent merges.
+- **Phase 4 gate:** Non-compliant send attempts are blocked with explicit machine-readable reasons; webhook replay is state-stable.
+- **Phase 5/7 gate:** Dashboard, website, and export projections reconcile within defined freshness SLO.
+- **Phase 8 gate:** Negative authorization suite proves no cross-side data read/write/export leakage.
 
 ## Sources
 
 - `.gsd/PROJECT.md`
 - `docs/PRD.md`
-- Brownfield implementation risk patterns from production messaging/workflow systems
-
----
-
-_Pitfalls research for: ParinayaOS_
-_Researched: 2026-02-13_
+- Production reliability patterns for messaging/event-driven coordination systems
