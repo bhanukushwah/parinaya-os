@@ -3,9 +3,9 @@
 ## Current Position
 
 - Phase: 1 (complete)
-- Plan: 02-01 complete (Phase 2 in progress)
-- Status: Phase 2 started; guest/import/audience database foundation is migration-backed
-- Last activity: 2026-02-13 — Executed 02-01 guest model/import pipeline schema plan
+- Plan: 02-02 complete (Phase 2 in progress)
+- Status: Phase 2 API guest management layer now active on top of 02-01 schema foundation
+- Last activity: 2026-02-13 — Executed 02-02 guest router + identity normalization/upsert plan
 
 ## Accumulated Context
 
@@ -38,4 +38,8 @@
 - Import telemetry schema now persists row outcomes (`created|updated|reactivated|warning_malformed_phone|skipped_no_phone`) and row inviteability state for warning visibility without data loss.
 - Migration artifacts for phase-02 schema are now generated at `packages/db/src/migrations/0001_wooden_speed_demon.sql` and `packages/db/src/migrations/0002_parched_triathlon.sql` with updated metadata snapshots.
 - Verification note (02-01): `bun run db:generate` and `bunx tsc --noEmit -p packages/db/tsconfig.json` passed; known workspace blocker remains `apps/server/src/index.ts` `TS6133` (pre-existing, unchanged).
-- Next execution point: Phase 2 plan 02-02 execution.
+- Phase 2 API layer now includes `packages/api/src/routers/guests.ts` with role-gated People/GuestUnit CRUD, membership assignment/removal, and `guest.edit` audit writes.
+- Deterministic phone-only identity workflow is now centralized in `packages/api/src/services/phone-normalization.ts` and `packages/api/src/services/guest-identity.ts` for reusable normalization + upsert/reactivation behavior.
+- Authorization policy matrix now includes `guest.read`/`guest.edit` actions and app router composition now exports `guests` domain for typed client usage.
+- Verification note (02-02): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed; behavioral invariants (reactivation, one-active-membership, audit emission) are enforced through service/router logic and existing DB partial unique indexes.
+- Next execution point: Phase 2 plan 02-03 execution.
