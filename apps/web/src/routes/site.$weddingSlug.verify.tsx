@@ -55,6 +55,7 @@ function WebsiteVerifyRoute() {
 				},
 				search: {
 					session: data.sessionToken,
+					section: "home",
 				},
 			});
 		},

@@ -1,9 +1,12 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
+import { GiftsNavTab } from "@/components/website/gifts-nav-tab";
+import { GiftsPanel } from "@/components/website/gifts-panel";
+import { GiftsStickyCta } from "@/components/website/gifts-sticky-cta";
 import { RsvpStickyCta } from "@/components/website/rsvp-sticky-cta";
 import { StaleSyncBanner } from "@/components/website/stale-sync-banner";
-import { orpc } from "@/utils/orpc";
+import { client, orpc } from "@/utils/orpc";
 
 export const Route = createFileRoute("/site/$weddingSlug")({
 	component: WeddingWebsiteRoute,
@@ -12,12 +15,14 @@ export const Route = createFileRoute("/site/$weddingSlug")({
 			typeof search.session === "string" && search.session.length > 0
 				? search.session
 				: undefined,
+		section: search.section === "gifts" ? "gifts" : "home",
 	}),
 });
 
 function WeddingWebsiteRoute() {
 	const { weddingSlug } = Route.useParams();
-	const { session } = Route.useSearch();
+	const { session, section } = Route.useSearch();
+	const navigate = Route.useNavigate();
 
 	const snapshotQuery = useQuery(
 		orpc.website.getSnapshot.queryOptions({
@@ -34,6 +39,31 @@ function WeddingWebsiteRoute() {
 				intent,
 				acknowledgedAt: new Date().toISOString(),
 			});
+		},
+	});
+
+	const contributeMutation = useMutation({
+		mutationFn: (payload: {
+			itemId: string;
+			amountPaise: number;
+			contributorName: string | null;
+			note: string | null;
+		}) => {
+			if (!session) {
+				throw new Error("Verify access before contributing.");
+			}
+
+			return client.gifts.contribute({
+				weddingId: weddingSlug,
+				trustedSessionToken: session,
+				itemId: payload.itemId,
+				amountPaise: payload.amountPaise,
+				contributorName: payload.contributorName,
+				note: payload.note,
+			});
+		},
+		onSuccess: () => {
+			void snapshotQuery.refetch();
 		},
 	});
 
@@ -56,6 +86,11 @@ function WeddingWebsiteRoute() {
 	}
 
 	const data = snapshotQuery.data;
+	const gifts = data.protected?.gifts;
+	const showGifts = Boolean(gifts) && !data.requiresVerification;
+	const giftsAvailable = gifts?.modeStatus === "published";
+	const isGiftsSectionActive = section === "gifts";
+	const shouldShowGiftsSection = showGifts && isGiftsSectionActive;
 
 	return (
 		<div className="pb-24">
@@ -79,6 +114,43 @@ function WeddingWebsiteRoute() {
 				/>
 
 				<section className="grid gap-3 rounded-xl border p-5">
+					<div className="flex items-center gap-2">
+						<button
+							className={`rounded-full border px-3 py-1 text-sm ${
+								!isGiftsSectionActive
+									? "border-indigo-300 bg-indigo-50 text-indigo-800"
+									: "border-muted-foreground/30 text-muted-foreground"
+							}`}
+							onClick={() => {
+								void navigate({
+									to: "/site/$weddingSlug",
+									params: { weddingSlug },
+									search: (previous) => ({
+										...previous,
+										section: "home",
+									}),
+								});
+							}}
+							type="button"
+						>
+							Overview
+						</button>
+						<GiftsNavTab
+							active={isGiftsSectionActive}
+							enabled={showGifts}
+							onClick={() => {
+								void navigate({
+									to: "/site/$weddingSlug",
+									params: { weddingSlug },
+									search: (previous) => ({
+										...previous,
+										section: "gifts",
+									}),
+								});
+							}}
+						/>
+					</div>
+
 					<h2 className="font-semibold text-lg">Public Summary</h2>
 					<p className="text-muted-foreground text-sm">
 						RSVP totals - Accepted: {data.summary.rsvpSummary.accepted},
@@ -97,6 +169,26 @@ function WeddingWebsiteRoute() {
 						))}
 					</div>
 				</section>
+
+				{shouldShowGiftsSection && gifts ? (
+					<GiftsPanel
+						availabilityMessage={gifts.availabilityMessage}
+						isSubmitting={contributeMutation.isPending}
+						items={gifts.items}
+						messageNote={gifts.messageNote}
+						modeStatus={gifts.modeStatus}
+						onContribute={(payload) => contributeMutation.mutate(payload)}
+						upiId={gifts.upiId}
+						upiPayeeName={gifts.upiPayeeName}
+						upiQrImageUrl={gifts.upiQrImageUrl}
+					/>
+				) : null}
+
+				{contributeMutation.isError ? (
+					<p className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-red-700 text-sm">
+						{contributeMutation.error.message}
+					</p>
+				) : null}
 
 				{data.requiresVerification ? (
 					<section className="rounded-xl border border-dashed p-5">
@@ -138,6 +230,20 @@ function WeddingWebsiteRoute() {
 				label={data.cta.label}
 				onFlowUnavailable={(intent) => {
 					queueIntentMutation.mutate(intent);
+				}}
+			/>
+			<GiftsStickyCta
+				isAvailable={Boolean(giftsAvailable)}
+				isVisible={showGifts}
+				onOpen={() => {
+					void navigate({
+						to: "/site/$weddingSlug",
+						params: { weddingSlug },
+						search: (previous) => ({
+							...previous,
+							section: "gifts",
+						}),
+					});
 				}}
 			/>
 		</div>
