@@ -238,6 +238,16 @@ export const invitesRouter = {
 							desc(inviteMessages.lastStatusAt),
 							desc(inviteMessages.createdAt),
 						],
+						with: {
+							transitions: {
+								orderBy: (transition, { desc }) => [desc(transition.appliedAt)],
+								limit: 10,
+							},
+							webhookReceipts: {
+								orderBy: (receipt, { desc }) => [desc(receipt.receivedAt)],
+								limit: 10,
+							},
+						},
 					},
 				},
 			});
