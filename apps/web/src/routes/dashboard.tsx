@@ -39,6 +39,20 @@ function RouteComponent() {
 
 			<section className="grid gap-4 md:grid-cols-2">
 				<article className="rounded-lg border p-4">
+					<h2 className="font-semibold text-lg">Invite Delivery</h2>
+					<p className="mt-1 text-muted-foreground text-sm">
+						Run WhatsApp invite sends with compliance precheck and lifecycle
+						status monitoring.
+					</p>
+					<Link
+						className="mt-4 inline-flex font-medium text-sm underline"
+						to="/dashboard/invites"
+					>
+						Open invite operations
+					</Link>
+				</article>
+
+				<article className="rounded-lg border p-4">
 					<h2 className="font-semibold text-lg">Guest Operations</h2>
 					<p className="mt-1 text-muted-foreground text-sm">
 						Create people, create guest units, and control
