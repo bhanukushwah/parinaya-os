@@ -12,6 +12,8 @@ export type GovernedAction =
 	| "event.restore"
 	| "event.reorder"
 	| "event.visibility.change"
+	| "guest.read"
+	| "guest.edit"
 	| "governance.role.change"
 	| "audit.read";
 
@@ -25,6 +27,8 @@ const POLICY_MATRIX: Record<WeddingRole, Set<GovernedAction>> = {
 		"event.restore",
 		"event.reorder",
 		"event.visibility.change",
+		"guest.read",
+		"guest.edit",
 		"governance.role.change",
 		"audit.read",
 	]),
@@ -35,6 +39,8 @@ const POLICY_MATRIX: Record<WeddingRole, Set<GovernedAction>> = {
 		"event.restore",
 		"event.reorder",
 		"event.visibility.change",
+		"guest.read",
+		"guest.edit",
 		"governance.role.change",
 		"audit.read",
 	]),
@@ -44,6 +50,8 @@ const POLICY_MATRIX: Record<WeddingRole, Set<GovernedAction>> = {
 		"event.archive",
 		"event.restore",
 		"event.reorder",
+		"guest.read",
+		"guest.edit",
 		"audit.read",
 	]),
 };
