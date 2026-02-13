@@ -60,8 +60,8 @@
 
 | Requirement | Roadmap Phase | Status |
 | --- | --- | --- |
-| EVT-01 | Phase 1 | Pending |
-| EVT-02 | Phase 1 | Pending |
+| EVT-01 | Phase 1 | Complete |
+| EVT-02 | Phase 1 | Complete |
 | EVT-03 | Phase 2 | Pending |
 | GST-01 | Phase 2 | Pending |
 | GST-02 | Phase 2 | Pending |
@@ -76,8 +76,8 @@
 | WEB-01 | Phase 4 | Pending |
 | WEB-02 | Phase 4 | Pending |
 | WEB-03 | Phase 4 | Pending |
-| GOV-01 | Phase 1 | Pending |
-| GOV-02 | Phase 1 | Pending |
+| GOV-01 | Phase 1 | Complete |
+| GOV-02 | Phase 1 | Complete |
 | GFT-01 | Phase 6 | Pending |
 | GFT-02 | Phase 6 | Pending |
 
