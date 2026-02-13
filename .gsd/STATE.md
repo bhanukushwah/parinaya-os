@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 2 (in progress)
-- Plan: 02-04 complete (Phase 2 in progress)
-- Status: Phase 2 now includes deterministic audience filtering and shared pre-send recipient resolution
-- Last activity: 2026-02-13 — Executed 02-04 audience filter + recipient resolver plan
+- Phase: 2 (complete)
+- Plan: 02-05 complete (Phase 2 complete)
+- Status: Phase 2 now includes operator dashboard routes for guest management, imports, and event audience preview/precheck workflows
+- Last activity: 2026-02-13 — Executed 02-05 dashboard guest/import/audience route plan
 
 ## Accumulated Context
 
@@ -51,4 +51,9 @@
 - Phase 2 audience services now include `buildAudience` (side/tags/search AND semantics + include/exclude overrides) and `resolveRecipients` (guest-unit-first fallback with normalized-phone dedupe).
 - API router now exposes `audience.preview` and `audience.precheckSend`, both wired through the same audience + recipient resolver path to prevent count drift.
 - Verification note (02-04): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed with audience builder, recipient resolver, and audience router composition.
-- Next execution point: Phase 2 plan 02-05 execution.
+- Web dashboard now includes `/dashboard/guests` for People + GuestUnit operations, assignment/reassignment workflows, and server-driven auth error gating for edits.
+- Web dashboard now includes `/dashboard/imports` for CSV/contacts/manual-row import execution with run counters and warning-row visibility.
+- Web dashboard now includes `/dashboard/events/$eventId/audience` for side/tags/search filtering (AND semantics), include/exclude overrides, and server-computed recipient count preview/precheck.
+- Generated route tree now includes all new phase-02 dashboard routes at `apps/web/src/routeTree.gen.ts`.
+- Verification note (02-05): `bun run --filter web build` and `bunx tsc --noEmit -p apps/web/tsconfig.json` passed.
+- Next execution point: Phase 3 planning and execution.
