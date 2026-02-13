@@ -58,6 +58,10 @@ const eventReadInput = z.object({
 	eventId: z.string().min(1),
 });
 
+const operatorListInput = z.object({
+	weddingId: z.string().min(1),
+});
+
 async function getMembershipForUser(weddingId: string, userId: string) {
 	return db.query.weddingMemberships.findFirst({
 		columns: {
@@ -87,6 +91,21 @@ async function assertAuthorizedForMutation(input: {
 }
 
 export const eventsRouter = {
+	listForOperator: protectedProcedure
+		.input(operatorListInput)
+		.handler(async ({ context, input }) => {
+			const role = await getRoleByMembership({
+				weddingId: input.weddingId,
+				userId: context.session.user.id,
+			});
+			assertMembershipRole(role);
+
+			return db.query.weddingEvents.findMany({
+				where: eq(weddingEvents.weddingId, input.weddingId),
+				orderBy: [asc(weddingEvents.sortOrder), asc(weddingEvents.id)],
+			});
+		}),
+
 	create: protectedProcedure
 		.input(createEventInput)
 		.handler(async ({ context, input }) => {
