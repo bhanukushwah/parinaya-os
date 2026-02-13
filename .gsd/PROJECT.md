@@ -8,6 +8,16 @@ ParinayaOS is a WhatsApp-first wedding operating system for India that helps fam
 
 Make Indian wedding coordination operationally reliable for families by turning guest + event management into a live, WhatsApp-native system of record that stays accurate under constant change.
 
+## Current Milestone: v1.0 Core Wedding OS
+
+Goal: Deliver the core v1 wedding operating system so families can reliably run multi-event coordination end-to-end without spreadsheet fallback.
+
+- Multi-event operations: event templates, visibility controls, ordering, and edit auditability.
+- Guest core: People + GuestUnit model with high-speed import and deterministic phone dedupe.
+- WhatsApp core loop: Cloud API invites, RSVPs, webhook/status tracking, and compliance-safe messaging.
+- Parent operations: dashboard and export workflows for headcount, pending RSVPs, and vendor-ready CSVs.
+- Presence and controls: lightweight website sync, India-appropriate gifts modes, and roles/audit safeguards.
+
 ## Requirements
 
 ### Validated
@@ -20,18 +30,14 @@ Make Indian wedding coordination operationally reliable for families by turning 
 
 ### Active
 
-<!-- Hypotheses from PRD v2; validate through phased delivery. -->
+<!-- Active scope for milestone v1.0 (Core Wedding OS). -->
 
-- [ ] Build multi-event wedding management for 5-10+ events with event templates, visibility controls (public vs invite-only), reordering, and edit auditability.
-- [ ] Implement People + GuestUnit (family-first) guest model so importing and inviting can start immediately even with incomplete family grouping.
-- [ ] Deliver high-speed guest onboarding via Google Contacts, CSV, and optional phone contact picker, with inline invite-name cleanup and deterministic dedupe by phone.
-- [ ] Support event-wise audience selection and bulk invite actions by side, tags, and search with clear selection counts for parent usability.
-- [ ] Launch WhatsApp messaging and RSVP capture via Meta WhatsApp Cloud API from day one, including templates, interactive replies, webhook ingestion, status tracking, and opt-in/24-hour-window compliance.
-- [ ] Ensure guests can RSVP with no account/login in <=3 interactions, with fallback parsing when interactive replies fail and Do-Not-Message enforcement.
-- [ ] Ship parent-first dashboard and exports that answer per-event headcount and pending RSVP questions in seconds, with CSV outputs for vendors and operations.
-- [ ] Publish a lightweight wedding website that auto-syncs event updates, supports privacy modes, and keeps WhatsApp RSVP as primary CTA.
-- [ ] Add India-appropriate gifts/registry modes (blessings, UPI/QR, external links, optional reservation) without becoming a payment processor.
-- [ ] Introduce role-based collaboration and audit logs for critical edits (event details, RSVP overrides, gifts configuration).
+- [ ] Build multi-event management for 5-10+ events with templates, visibility controls (public vs invite-only), ordering, and edit auditability.
+- [ ] Implement People + GuestUnit (family-first) guest model and high-speed onboarding via Google Contacts/CSV/phone picker, with invite-name cleanup and deterministic phone dedupe.
+- [ ] Support event-wise audience selection and bulk invite actions by side/tags/search with clear selection counts for parent usability.
+- [ ] Launch WhatsApp invites and RSVP capture via Meta WhatsApp Cloud API (templates, interactive/fallback flows, webhook ingestion, status tracking, opt-in + 24-hour-window compliance, and Do-Not-Message enforcement).
+- [ ] Ship parent-first dashboard + exports that answer per-event headcount and pending RSVP questions quickly, with vendor-ready CSV output.
+- [ ] Publish a lightweight wedding website with privacy modes and WhatsApp RSVP CTA, add India-appropriate gifts/registry modes, and introduce role-based collaboration + audit logs for critical edits.
 
 ### Out of Scope
 
@@ -72,4 +78,4 @@ Make Indian wedding coordination operationally reliable for families by turning 
 
 ---
 
-_Last updated: 2026-02-13 after initialization_
+_Last updated: 2026-02-13 after milestone v1.0 initialization_
