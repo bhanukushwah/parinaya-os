@@ -1,0 +1,24 @@
+{
+  "name": "@parinaya-os/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@parinaya-os/db": "workspace:*",
+    "@parinaya-os/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@parinaya-os/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
