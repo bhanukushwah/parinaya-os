@@ -7,7 +7,7 @@ import { client, orpc } from "@/utils/orpc";
 
 const sideOptions = ["neutral", "bride", "groom"] as const;
 
-export const Route = createFileRoute("/dashboard/guests" as never)({
+export const Route = createFileRoute("/dashboard/guests")({
 	component: DashboardGuestsRoute,
 	beforeLoad: async () => {
 		const session = await authClient.getSession();

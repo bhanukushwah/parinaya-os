@@ -46,7 +46,7 @@ function RouteComponent() {
 					</p>
 					<Link
 						className="mt-4 inline-flex font-medium text-sm underline"
-						to={"/dashboard/guests" as never}
+						to="/dashboard/guests"
 					>
 						Open guest operations
 					</Link>
@@ -86,7 +86,7 @@ function RouteComponent() {
 					</p>
 					<Link
 						className="mt-4 inline-flex font-medium text-sm underline"
-						to={"/dashboard/imports" as never}
+						to="/dashboard/imports"
 					>
 						Open import operations
 					</Link>

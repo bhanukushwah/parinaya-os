@@ -7,7 +7,7 @@ import { client, orpc } from "@/utils/orpc";
 
 const defaultCountryOptions = ["IN", "US"] as const;
 
-export const Route = createFileRoute("/dashboard/imports" as never)({
+export const Route = createFileRoute("/dashboard/imports")({
 	component: DashboardImportsRoute,
 	beforeLoad: async () => {
 		const session = await authClient.getSession();
