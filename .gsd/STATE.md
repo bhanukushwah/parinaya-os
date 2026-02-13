@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 3 (complete)
-- Plan: 03-05 complete (phase verification passed)
-- Status: Phase 3 execution complete with approved dashboard checkpoint and passed verification report
-- Last activity: 2026-02-13 — Completed lifecycle/policy tests and published 03-VERIFICATION passed verdict
+- Phase: 4 (complete)
+- Plan: 04-01 through 04-05 complete
+- Status: Phase 4 completed with automated + human verification passing; ready for Phase 5 planning
+- Last activity: 2026-02-13 — Approved phase-04 human checkpoint and marked verification passed
 
 ## Accumulated Context
 
@@ -72,3 +72,11 @@
 - Human checkpoint result: invite dashboard verification approved by user.
 - Verification note (03-05): `bun test packages/api/src/services/whatsapp-lifecycle.test.ts packages/api/src/services/whatsapp-policy.test.ts` and `bunx tsc --noEmit -p packages/api/tsconfig.json` passed.
 - Verification result (phase): `.gsd/phases/03-whatsapp-invite-delivery-and-compliance-safety/03-VERIFICATION.md` passed (score 9/9).
+- Phase 4 context is captured at `.gsd/phases/04-rsvp-completion-wedding-website-sync/04-CONTEXT.md` with locked decisions on three-step RSVP flow, near-real-time website sync freshness signaling, OTP-based invite-only access, and state-aware sticky WhatsApp CTA behavior.
+- Phase 4 plans are now defined: `04-01` schema/migrations foundation, `04-02` tested WhatsApp RSVP flow engine + webhook wiring, `04-03` website snapshot sync + OTP access router, `04-04` website UX routes/components + human verification checkpoint, `04-05` tests + phase verification report.
+- Phase 4 schema primitives now exist in `packages/db/src/schema/rsvp.ts` with migration `packages/db/src/migrations/0004_condemned_talisman.sql` and meta snapshot `packages/db/src/migrations/meta/0004_snapshot.json`.
+- API now includes RSVP and website-sync services: `whatsapp-rsvp-flow`, `whatsapp-rsvp-handler`, `website-sync`, and `website-access`, with website router exported at `packages/api/src/routers/website.ts`.
+- Webhook ingestion now routes inbound WhatsApp RSVP messages through `handleWhatsAppRsvpInput(...)` and emits structured follow-up prompts via provider helpers.
+- Web app now includes website routes `apps/web/src/routes/site.$weddingSlug.tsx` and `apps/web/src/routes/site.$weddingSlug.verify.tsx` plus reusable stale-banner/sticky-CTA components.
+- Verification artifact generated at `.gsd/phases/04-rsvp-completion-wedding-website-sync/04-VERIFICATION.md` with status `human_needed` pending UI checkpoint approval.
+- Human checkpoint for Phase 4 website UX is now approved and verification status moved to `passed`.

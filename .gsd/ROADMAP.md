@@ -62,6 +62,8 @@
 
 **Goal:** Close the guest response loop through WhatsApp RSVP and synchronized website experiences with privacy controls.
 
+**Status:** Complete (04-01 through 04-05 complete; verification passed 2026-02-13)
+
 **Requirements:** WA-03, WEB-01, WEB-02, WEB-03
 
 **Success Criteria:**
@@ -70,6 +72,14 @@
 - Published website data auto-syncs event/RSVP state updates without manual republish actions.
 - Invite-only website mode prevents unauthorized visitors from viewing protected event schedule/guest content.
 - Website surfaces WhatsApp RSVP CTA that routes invitees into the active RSVP flow.
+
+**Planned Execution:**
+
+- [x] 04-01: Add RSVP + website-sync schema foundations and migrations.
+- [x] 04-02: Implement tested WhatsApp RSVP three-step flow engine and webhook handler wiring.
+- [x] 04-03: Implement website snapshot sync services and invite-only OTP access router.
+- [x] 04-04: Build website routes with stale banner + state-aware sticky WhatsApp RSVP CTA.
+- [x] 04-05: Add RSVP/website tests and produce phase verification report.
 
 ### Phase 5: Parent Operations Dashboard and Exports
 
@@ -123,4 +133,4 @@ Coverage check: 20/20 v1.0 requirements mapped exactly once.
 
 ---
 
-_Last updated: 2026-02-13 after Phase 3 execution + verification (03-01 through 03-05)_
+_Last updated: 2026-02-13 after Phase 4 completion and checkpoint approval_
