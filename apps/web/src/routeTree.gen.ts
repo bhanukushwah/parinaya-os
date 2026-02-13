@@ -14,6 +14,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SiteWeddingSlugRouteImport } from './routes/site.$weddingSlug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
+import { Route as DashboardOperationsRouteImport } from './routes/dashboard.operations'
 import { Route as DashboardInvitesRouteImport } from './routes/dashboard.invites'
 import { Route as DashboardImportsRouteImport } from './routes/dashboard.imports'
 import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
@@ -47,6 +48,11 @@ const EventsEventIdRoute = EventsEventIdRouteImport.update({
   id: '/events/$eventId',
   path: '/events/$eventId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardOperationsRoute = DashboardOperationsRouteImport.update({
+  id: '/operations',
+  path: '/operations',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardInvitesRoute = DashboardInvitesRouteImport.update({
   id: '/invites',
@@ -99,6 +105,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
+  '/dashboard/operations': typeof DashboardOperationsRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/site/$weddingSlug': typeof SiteWeddingSlugRouteWithChildren
   '/dashboard/invites/$runId': typeof DashboardInvitesRunIdRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
+  '/dashboard/operations': typeof DashboardOperationsRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/site/$weddingSlug': typeof SiteWeddingSlugRouteWithChildren
   '/dashboard/invites/$runId': typeof DashboardInvitesRunIdRoute
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/dashboard/guests': typeof DashboardGuestsRoute
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
+  '/dashboard/operations': typeof DashboardOperationsRoute
   '/events/$eventId': typeof EventsEventIdRoute
   '/site/$weddingSlug': typeof SiteWeddingSlugRouteWithChildren
   '/dashboard/invites/$runId': typeof DashboardInvitesRunIdRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/dashboard/guests'
     | '/dashboard/imports'
     | '/dashboard/invites'
+    | '/dashboard/operations'
     | '/events/$eventId'
     | '/site/$weddingSlug'
     | '/dashboard/invites/$runId'
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/dashboard/guests'
     | '/dashboard/imports'
     | '/dashboard/invites'
+    | '/dashboard/operations'
     | '/events/$eventId'
     | '/site/$weddingSlug'
     | '/dashboard/invites/$runId'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/dashboard/guests'
     | '/dashboard/imports'
     | '/dashboard/invites'
+    | '/dashboard/operations'
     | '/events/$eventId'
     | '/site/$weddingSlug'
     | '/dashboard/invites/$runId'
@@ -228,6 +240,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/events/$eventId'
       preLoaderRoute: typeof EventsEventIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/operations': {
+      id: '/dashboard/operations'
+      path: '/operations'
+      fullPath: '/dashboard/operations'
+      preLoaderRoute: typeof DashboardOperationsRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/invites': {
       id: '/dashboard/invites'
@@ -317,6 +336,7 @@ interface DashboardRouteChildren {
   DashboardGuestsRoute: typeof DashboardGuestsRoute
   DashboardImportsRoute: typeof DashboardImportsRoute
   DashboardInvitesRoute: typeof DashboardInvitesRouteWithChildren
+  DashboardOperationsRoute: typeof DashboardOperationsRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -325,6 +345,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardGuestsRoute: DashboardGuestsRoute,
   DashboardImportsRoute: DashboardImportsRoute,
   DashboardInvitesRoute: DashboardInvitesRouteWithChildren,
+  DashboardOperationsRoute: DashboardOperationsRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
