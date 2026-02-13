@@ -13,7 +13,6 @@ import {
 	getRoleByMembership,
 } from "../policies/authorize";
 import { buildAudience } from "../services/audience-builder";
-import { resolveRecipients } from "../services/recipient-resolver";
 
 const audienceInput = z.object({
 	weddingId: z.string().min(1),
@@ -77,10 +76,7 @@ async function resolveAudienceForEvent(input: z.infer<typeof audienceInput>) {
 		excludeGuestUnitIds: input.excludeGuestUnitIds,
 	});
 
-	const recipients = await resolveRecipients({
-		weddingId: input.weddingId,
-		guestUnitIds: audience.guestUnitIds,
-	});
+	const recipients = audience.recipients;
 
 	const recipientSample = recipients.recipients.slice(0, 20).map((target) => ({
 		phoneE164: target.phoneE164,
