@@ -4,6 +4,7 @@ import { protectedProcedure, publicProcedure } from "../index";
 import { auditRouter } from "./audit";
 import { eventsRouter } from "./events";
 import { governanceRouter } from "./governance";
+import { guestImportsRouter } from "./guest-imports";
 import { guestsRouter } from "./guests";
 
 export const appRouter = {
@@ -19,6 +20,7 @@ export const appRouter = {
 	events: eventsRouter,
 	governance: governanceRouter,
 	guests: guestsRouter,
+	guestImports: guestImportsRouter,
 	audit: auditRouter,
 };
 export type AppRouter = typeof appRouter;
