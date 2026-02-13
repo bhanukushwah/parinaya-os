@@ -15,6 +15,9 @@ process.env.WEBSITE_OTP_TTL_SECONDS ??= "300";
 process.env.WEBSITE_OTP_MAX_ATTEMPTS ??= "5";
 process.env.WEBSITE_TRUSTED_SESSION_TTL_DAYS ??= "30";
 process.env.WEBSITE_SYNC_STALE_THRESHOLD_SECONDS ??= "120";
+process.env.GIFTS_STALE_THRESHOLD_SECONDS ??= "300";
+process.env.GIFTS_UNAVAILABLE_MESSAGE ??=
+	"Gifts are currently unavailable. Please check back later.";
 
 const { projectWebsiteResponse } = await import("./website");
 
@@ -55,6 +58,15 @@ describe("website router", () => {
 						},
 					],
 					recentRsvpActivity: [],
+					gifts: {
+						modeStatus: "draft",
+						availabilityMessage: "Gifts are not visible right now.",
+						upiPayeeName: null,
+						upiId: null,
+						upiQrImageUrl: null,
+						messageNote: null,
+						items: [],
+					},
 				},
 			},
 			trustedSession: null,
@@ -101,6 +113,25 @@ describe("website router", () => {
 							updatedAt: new Date(),
 						},
 					],
+					gifts: {
+						modeStatus: "published",
+						availabilityMessage: null,
+						upiPayeeName: "Asha",
+						upiId: "asha@upi",
+						upiQrImageUrl: null,
+						messageNote: "Thank you",
+						items: [
+							{
+								id: "gift-1",
+								title: "Mixer",
+								description: null,
+								targetAmountPaise: 500000,
+								amountRaisedPaise: 125000,
+								progressPercent: 25,
+								isCompleted: false,
+							},
+						],
+					},
 				},
 			},
 			trustedSession: {

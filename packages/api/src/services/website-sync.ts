@@ -1,5 +1,6 @@
 import { db } from "@parinaya-os/db";
 import { weddingEvents } from "@parinaya-os/db/schema/events";
+import { giftItems, giftsModes } from "@parinaya-os/db/schema/gifts";
 import {
 	rsvpFlowSessions,
 	rsvpPersonResponses,
@@ -50,6 +51,23 @@ export type WebsiteSnapshot = {
 			finalResponse: "accept" | "decline" | null;
 			updatedAt: Date;
 		}>;
+		gifts: {
+			modeStatus: "draft" | "published" | "hidden" | "disabled";
+			availabilityMessage: string | null;
+			upiPayeeName: string | null;
+			upiId: string | null;
+			upiQrImageUrl: string | null;
+			messageNote: string | null;
+			items: Array<{
+				id: string;
+				title: string;
+				description: string | null;
+				targetAmountPaise: number;
+				amountRaisedPaise: number;
+				progressPercent: number;
+				isCompleted: boolean;
+			}>;
+		};
 	};
 };
 
@@ -176,6 +194,28 @@ export async function buildWebsiteSnapshot(input: {
 			})
 		: [];
 
+	const giftsMode = await db.query.giftsModes.findFirst({
+		where: eq(giftsModes.weddingId, input.weddingId),
+	});
+
+	const giftsItems = giftsMode
+		? await db.query.giftItems.findMany({
+				where: and(
+					eq(giftItems.giftsModeId, giftsMode.id),
+					eq(giftItems.isArchived, false),
+				),
+				orderBy: [asc(giftItems.sortOrder), asc(giftItems.createdAt)],
+			})
+		: [];
+
+	const giftsStatus = giftsMode?.modeStatus ?? "draft";
+	const giftsAvailabilityMessage =
+		giftsStatus === "disabled"
+			? env.GIFTS_UNAVAILABLE_MESSAGE
+			: giftsStatus !== "published"
+				? "Gifts are not visible right now."
+				: null;
+
 	return {
 		weddingId: input.weddingId,
 		events: publishedEvents.map((event) => ({
@@ -204,6 +244,30 @@ export async function buildWebsiteSnapshot(input: {
 				finalResponse: entry.finalResponse,
 				updatedAt: entry.updatedAt,
 			})),
+			gifts: {
+				modeStatus: giftsStatus,
+				availabilityMessage: giftsAvailabilityMessage,
+				upiPayeeName: giftsMode?.upiPayeeName ?? null,
+				upiId: giftsMode?.upiId ?? null,
+				upiQrImageUrl: giftsMode?.upiQrImageUrl ?? null,
+				messageNote: giftsMode?.messageNote ?? null,
+				items: giftsItems.map((item) => ({
+					id: item.id,
+					title: item.title,
+					description: item.description,
+					targetAmountPaise: item.targetAmountPaise,
+					amountRaisedPaise: item.amountRaisedPaise,
+					progressPercent:
+						item.targetAmountPaise <= 0
+							? 0
+							: Math.round(
+									(Math.min(item.amountRaisedPaise, item.targetAmountPaise) /
+										item.targetAmountPaise) *
+										100,
+								),
+					isCompleted: item.amountRaisedPaise >= item.targetAmountPaise,
+				})),
+			},
 		},
 	};
 }

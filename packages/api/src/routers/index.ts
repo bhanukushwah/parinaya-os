@@ -4,6 +4,7 @@ import { protectedProcedure, publicProcedure } from "../index";
 import { audienceRouter } from "./audience";
 import { auditRouter } from "./audit";
 import { eventsRouter } from "./events";
+import { giftsRouter } from "./gifts";
 import { governanceRouter } from "./governance";
 import { guestImportsRouter } from "./guest-imports";
 import { guestsRouter } from "./guests";
@@ -29,6 +30,7 @@ export const appRouter = {
 	audience: audienceRouter,
 	invites: invitesRouter,
 	operations: operationsRouter,
+	gifts: giftsRouter,
 	website: websiteRouter,
 };
 export type AppRouter = typeof appRouter;
