@@ -18,6 +18,7 @@
 		"@parinaya-os/auth": "workspace:*",
 		"@parinaya-os/db": "workspace:*",
 		"@parinaya-os/env": "workspace:*",
+		"csv-parse": "catalog:",
 		"dotenv": "catalog:",
 		"libphonenumber-js": "catalog:",
 		"zod": "catalog:"

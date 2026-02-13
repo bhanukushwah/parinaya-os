@@ -8,6 +8,7 @@
 		],
 		"catalog": {
 			"dotenv": "^17.2.2",
+			"csv-parse": "^6.1.0",
 			"libphonenumber-js": "^1.12.25",
 			"zod": "^4.1.13",
 			"typescript": "^5",
