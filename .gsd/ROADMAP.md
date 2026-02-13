@@ -106,12 +106,22 @@
 
 **Goal:** Deliver lightweight gifting capability with explicit operator safeguards.
 
+**Status:** In progress (06-01 through 06-05 executed; awaiting human checkpoint approvals for 06-03 and 06-04)
+
 **Requirements:** GFT-01, GFT-02
 
 **Success Criteria:**
 
 - Parent Admin can enable a basic gifts mode and publish shareable gift/UPI details for invited guests.
 - Gift safety controls allow hide/disable behavior and role-restricted editing to prevent accidental misuse.
+
+**Planned Execution:**
+
+- [x] 06-01: Add gifts schema/migration foundation with env and audit action contracts.
+- [x] 06-02: Implement gifts API lifecycle/contribution/projection services and router wiring.
+- [ ] 06-03: Complete dashboard gifts human checkpoint approval.
+- [ ] 06-04: Complete website gifts human checkpoint approval.
+- [x] 06-05: Add gifts tests and publish phase verification report (status: `human_needed`).
 
 ## Requirement Coverage Matrix (v1.0)
 
@@ -142,4 +152,4 @@ Coverage check: 20/20 v1.0 requirements mapped exactly once.
 
 ---
 
-_Last updated: 2026-02-13 after Phase 5 execution_
+_Last updated: 2026-02-14 during Phase 6 execution_

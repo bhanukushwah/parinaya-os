@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 5 (complete)
-- Plan: 05-01 through 05-04 complete
-- Status: Phase 5 execution complete; verification passed
-- Last activity: 2026-02-13 — Completed operations tests and published phase verification report (status: passed)
+- Phase: 6 (in progress)
+- Plan: 06-01 through 06-05 executed
+- Status: Automated execution complete; awaiting human approvals for 06-03 and 06-04 checkpoints (`06-VERIFICATION.md` status: `human_needed`)
+- Last activity: 2026-02-14 — Executed gifts phase plans, added regression tests, generated runbooks/session artifacts, and published verification report
 
 ## Accumulated Context
 
@@ -87,3 +87,11 @@
 - Phase 5 plan `05-03` auto tasks are implemented with `/dashboard/operations`, reusable filter/metrics components, URL-persisted `event/side/rsvpStatus` filters, `Data as of` display, and export preview/download wiring.
 - Human checkpoint result: phase-05 operations dashboard UX/export verification approved by user.
 - Phase 5 plan `05-04` added regression tests for operations metric/filter/export contracts and produced `.gsd/phases/05-parent-operations-dashboard-and-exports/05-VERIFICATION.md` with status `passed` (9/9 must-haves).
+- Phase 6 schema primitives now exist in `packages/db/src/schema/gifts.ts` with migration artifacts `packages/db/src/migrations/0005_gifts_baseline.sql` and `packages/db/src/migrations/meta/0005_snapshot.json`.
+- Gifts lifecycle/contribution/projection services now exist at `packages/api/src/services/gifts-lifecycle.ts`, `packages/api/src/services/gifts-contribution.ts`, and `packages/api/src/services/gifts-projection.ts`.
+- Gifts router is now wired in app composition at `packages/api/src/routers/gifts.ts` and `packages/api/src/routers/index.ts`, with website snapshot integration in `packages/api/src/services/website-sync.ts`.
+- Dashboard gifts route and components now exist at `apps/web/src/routes/dashboard.gifts.tsx` and `apps/web/src/components/gifts/*`.
+- Website gifts surfaces now exist at `apps/web/src/routes/site.$weddingSlug.tsx` and `apps/web/src/components/website/gifts-*.tsx`.
+- Gifts regression tests now exist at `packages/api/src/services/gifts-lifecycle.test.ts`, `packages/api/src/services/gifts-contribution.test.ts`, and `packages/api/src/routers/gifts.test.ts`.
+- Human checkpoint runbooks/session placeholders are prepared under `.gsd/tmp/06-03-*` and `.gsd/tmp/06-04-*`.
+- Phase verification artifact now exists at `.gsd/phases/06-gifts-basics-and-safety-controls/06-VERIFICATION.md` with status `human_needed` pending checkpoint approvals.
