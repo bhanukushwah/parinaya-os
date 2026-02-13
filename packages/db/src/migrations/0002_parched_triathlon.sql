@@ -1,0 +1,2 @@
+DROP INDEX "guest_unit_members_one_active_membership_per_person";--> statement-breakpoint
+CREATE UNIQUE INDEX "guest_unit_members_one_active_membership_per_person" ON "guest_unit_members" USING btree ("wedding_id","person_id") WHERE "guest_unit_members"."is_active" = true;

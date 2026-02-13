@@ -205,10 +205,9 @@ export const guestUnitMembers = pgTable(
 			.notNull(),
 	},
 	(table) => [
-		uniqueIndex("guest_unit_members_one_active_membership_per_person").on(
-			table.weddingId,
-			table.personId,
-		),
+		uniqueIndex("guest_unit_members_one_active_membership_per_person")
+			.on(table.weddingId, table.personId)
+			.where(sql`${table.isActive} = true`),
 		uniqueIndex("guest_unit_members_unique_active_pair")
 			.on(table.guestUnitId, table.personId)
 			.where(sql`${table.isActive} = true`),
