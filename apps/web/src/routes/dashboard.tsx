@@ -39,6 +39,20 @@ function RouteComponent() {
 
 			<section className="grid gap-4 md:grid-cols-2">
 				<article className="rounded-lg border p-4">
+					<h2 className="font-semibold text-lg">Guest Operations</h2>
+					<p className="mt-1 text-muted-foreground text-sm">
+						Create people, create guest units, and control
+						assignment/reassignment workflows.
+					</p>
+					<Link
+						className="mt-4 inline-flex font-medium text-sm underline"
+						to={"/dashboard/guests" as never}
+					>
+						Open guest operations
+					</Link>
+				</article>
+
+				<article className="rounded-lg border p-4">
 					<h2 className="font-semibold text-lg">Event Governance</h2>
 					<p className="mt-1 text-muted-foreground text-sm">
 						Manage lifecycle, visibility, and display order for every event.
@@ -61,6 +75,20 @@ function RouteComponent() {
 						to="/dashboard/audit"
 					>
 						Open central audit
+					</Link>
+				</article>
+
+				<article className="rounded-lg border p-4">
+					<h2 className="font-semibold text-lg">Import Pipeline</h2>
+					<p className="mt-1 text-muted-foreground text-sm">
+						Launch CSV, contacts, and manual-row imports and inspect warning
+						visibility for non-inviteable rows.
+					</p>
+					<Link
+						className="mt-4 inline-flex font-medium text-sm underline"
+						to={"/dashboard/imports" as never}
+					>
+						Open import operations
 					</Link>
 				</article>
 			</section>
