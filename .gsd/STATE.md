@@ -3,9 +3,9 @@
 ## Current Position
 
 - Phase: 2 (in progress)
-- Plan: 02-03 complete (Phase 2 in progress)
-- Status: Phase 2 import pipeline now active across CSV/contacts/manual channels with deterministic dedupe + warning persistence
-- Last activity: 2026-02-13 — Executed 02-03 import pipeline and guestImports API plan
+- Plan: 02-04 complete (Phase 2 in progress)
+- Status: Phase 2 now includes deterministic audience filtering and shared pre-send recipient resolution
+- Last activity: 2026-02-13 — Executed 02-04 audience filter + recipient resolver plan
 
 ## Accumulated Context
 
@@ -48,4 +48,7 @@
 - Guest import run tracking now includes idempotency replay semantics and persisted counters for created/updated/reactivated/warning/skipped/failed outcomes.
 - API router now exposes `guestImports` procedures for CSV, contacts, and manual import execution plus run list/detail and warning-row retrieval under guest role boundaries.
 - Verification note (02-03): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed; route wiring confirms all channels invoke shared `runGuestImport` path.
-- Next execution point: Phase 2 plan 02-04 execution.
+- Phase 2 audience services now include `buildAudience` (side/tags/search AND semantics + include/exclude overrides) and `resolveRecipients` (guest-unit-first fallback with normalized-phone dedupe).
+- API router now exposes `audience.preview` and `audience.precheckSend`, both wired through the same audience + recipient resolver path to prevent count drift.
+- Verification note (02-04): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed with audience builder, recipient resolver, and audience router composition.
+- Next execution point: Phase 2 plan 02-05 execution.
