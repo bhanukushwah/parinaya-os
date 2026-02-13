@@ -1,69 +1,57 @@
-# Project Research Synthesis
+# Milestone Research Synthesis - v1.0 Core Wedding OS
 
 ## Executive Summary
 
-ParinayaOS should stay on the current brownfield baseline (Bun + Turbo + React/Vite + Elysia/oRPC + Better Auth + Drizzle/Postgres) and invest roadmap effort in reliability-critical domain architecture: queue-first WhatsApp orchestration, deterministic guest identity, and projection-backed parent operations. Product success depends less on UI framework changes and more on message delivery correctness, RSVP state integrity, and trust-preserving privacy/compliance controls at 1000+ guest scale.
+ParinayaOS v1.0 should ship as a reliability-first domain expansion on the existing stack, not a platform rewrite. The milestone succeeds when it reliably runs multi-event wedding operations through a WhatsApp-first loop (invite -> status -> RSVP -> dashboard/export), with deterministic guest identity handling, strict privacy/compliance controls, and clear role/audit accountability at wedding-scale load.
 
-## Stack Recommendations
+## Stack additions
 
-- Keep the existing runtime and typed contract path; avoid replatforming during v1/v2 execution.
-- Add BullMQ + Redis + dedicated worker process for all bursty/long-running flows (messaging, imports, exports, reconciliation).
-- Integrate WhatsApp Cloud API via an isolated adapter with version pinning by environment.
-- Use Postgres as canonical store, with projection/read models for fast dashboard and export performance.
-- Add structured logging, correlation IDs, and tracing across command -> outbox -> provider -> webhook lifecycle.
+- Keep baseline unchanged: Bun + Turbo + React/Vite + Elysia/oRPC + Better Auth + Drizzle/Postgres.
+- Add async spine: `bullmq` + `ioredis` with a dedicated `apps/worker` for sends, webhook processing, imports, exports, and reconciliation.
+- Add WhatsApp adapter boundary for Meta Cloud API with env-pinned Graph version and template/window enforcement before enqueue.
+- Add ingest/export utilities: `libphonenumber-js`, `fast-csv` (or `csv-stringify`), optional S3-compatible storage for generated artifacts.
+- Add performance and observability primitives: `pg_trgm` indexes, projection tables/materialized views, correlation IDs, structured logs.
 
-## Table Stakes
+## Table-stakes for this milestone
 
-- Multi-event wedding management with event-level visibility controls.
-- Family-centric guest model (GuestUnit + Person) with fast import and deterministic phone-based dedupe.
-- Event-wise audience selection and bulk invite actions.
-- Zero-login WhatsApp RSVP capture (interactive + resilient fallback).
-- Parent-first dashboard with pending visibility and vendor-ready CSV exports.
-- Lightweight synced website and baseline role/audit controls.
+- Multi-event operations with ordering and public vs invite-only visibility.
+- Family-first guest model (`Person` + `GuestUnit`) with deterministic phone normalization and dedupe.
+- Fast onboarding from Google Contacts/CSV/manual input with explicit conflict handling.
+- Event-wise audience selection with safe bulk invite actions.
+- WhatsApp core loop: compliant send, webhook-tracked status, and <=3-step RSVP (with numeric fallback).
+- Parent operations core: pending RSVPs, headcount visibility, and vendor-ready CSV exports.
+- Lightweight synced website, gifts basics, and role-scoped critical edits with audit logs.
 
-## Differentiators
+## Key architecture shape/integration points
 
-- Household-first RSVP with uncertain count/confidence handling.
-- WhatsApp-native policy-aware RSVP loop, not just link sharing.
-- Import-now-clean-later workflow tuned for messy real-world contacts.
-- Privacy-aware event visibility across website and messaging channels.
-- Parent-operational UX optimized for quick decisions and exports.
+- Canonical writes live in domain services on server; web remains a typed consumer.
+- `apps/server`: command/query procedures for events, guests, invites, RSVP, dashboard, exports, website settings.
+- `apps/worker`: queue consumers (`invites.send`, `webhooks.process`, `imports.contacts`, `exports.generate`, `reconciliation.run`).
+- `packages/contracts` + `packages/db`: typed contracts plus canonical tables for events/guests/invites/rsvp/webhooks/consent/audit/exports.
+- Reliability boundaries: webhook endpoint only verifies+persistent-ack, state transitions are idempotent/monotonic, projections are rebuildable with freshness markers.
 
-## Architecture Shape
+## Watch-outs/pitfalls
 
-- Domain-driven bounded contexts: Wedding/Roles, Guest, Events, Invitation/RSVP, Messaging, Website/Gifts, Compliance/Audit.
-- Canonical write model in Postgres; external provider events mutate state only via validated transitions.
-- Transactional outbox + async workers for outbound messaging and high-volume operations.
-- Idempotent webhook ingestion with append-only raw payload store and monotonic state transitions.
-- Projection tables/materialized views for counters, pending lists, and status funnels.
-- Public website/token surface isolated with strict scoped access and no admin privilege crossover.
+- Identity drift across imports creates duplicate sends and broken household counts.
+- Guest model migration can corrupt historical RSVP/export truth if relinking is not versioned and reversible.
+- WhatsApp compliance misses (opt-in, 24h window, DNM) can degrade deliverability and trust.
+- Non-idempotent or order-sensitive webhook handling can move statuses backward and duplicate updates.
+- Projection drift can desync dashboard, website, and exports unless reconciliation is routine.
+- Bulk performance collapse (200+ invite actions, 1000+ guest exports) occurs without set-based writes, indexing, and queueing.
+- Role/token leakage can expose cross-side or invite-only data.
 
-## Key Pitfalls
+## Decisions to lock now
 
-- RSVP history corruption during Person -> GuestUnit retrofits.
-- Non-idempotent webhook processing causing duplicate/out-of-order state corruption.
-- Policy-unsafe sends (opt-out/window/template violations) damaging delivery and compliance posture.
-- Phone normalization drift across import channels creating duplicate or wrong merges.
-- Bulk operation collapse at real wedding scale due to row-by-row writes and weak indexing.
-- Role-scope leakage and token privacy leaks in side-scoped collaboration/public surfaces.
-- Cross-surface state drift (dashboard/export/website/message logs disagreeing).
+- Lock canonical identity contract now: phone normalization standard, deterministic dedupe keys, explicit merge/relink rules.
+- Lock queue-first messaging architecture now: outbox, retries with backoff, DLQ, replay-safe processors.
+- Lock compliance as a server hard gate now: no UI-only safeguards for send eligibility.
+- Lock projection model now: parent-facing reads from projections with `as_of` freshness and scheduled reconciliation.
+- Lock authorization now: centralized role matrix (`Owner/Admin/Side Admin/Viewer`) with row-scoped reads/writes/exports.
+- Lock v1 scope boundaries now: no payment rails, no theme builder, no seating/planning module, no custom chat.
 
-## Decisions to Lock Now
+## Actionable guidance for requirements and roadmap
 
-- Lock canonical identity model and migration safety rules before UX expansion.
-- Lock queue-first messaging architecture (outbox, retries, DLQ, replay) before broad invite UX.
-- Lock send-time compliance gate as a hard server check, never a UI hint.
-- Lock E.164 normalization + deterministic dedupe contract shared across all import sources.
-- Lock projection-first dashboard strategy with explicit freshness/reconciliation model.
-- Lock authorization matrix and token-scoping model before website and export hardening.
-
-## Actionable Guidance
-
-- Build phases in this order: domain kernel -> import/dedupe -> messaging spine -> RSVP intelligence -> parent ops -> public surface -> hardening.
-- Define and test idempotency semantics early (webhooks, retries, replay) before live traffic.
-- Add negative authorization tests for every role/scope path, especially exports.
-- Enforce set-based writes and queue-backed bulk jobs; ban row-by-row bulk mutations in request handlers.
-- Surface "last updated" timestamps on projections and run scheduled reconciliation jobs.
-- Capture audit events (actor + before/after + reason) for every critical mutation from first implementation.
-- Monitor SLO anchors: invite queue acknowledgment, webhook-to-dashboard latency, export p95, webhook success rate.
-- Keep v1 boundaries strict: no in-app payments, no full theme builder, no mandatory pre-send perfect grouping.
+- Encode quality gates in requirements: deterministic dedupe, webhook replay safety, <=3-step RSVP, no invite-only website leakage.
+- Sequence roadmap as dependencies: domain+policy -> import/dedupe -> messaging/outbox -> webhook+RSVP transitions -> projections/dashboard/exports -> website/privacy/gifts -> hardening.
+- Add explicit non-functional criteria: queue ack p95, webhook-to-dashboard latency p95, bulk enqueue throughput, export p95.
+- Require negative authorization tests and compliance rejection reason codes before phase completion.
