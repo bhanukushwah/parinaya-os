@@ -10,6 +10,11 @@ process.env.WHATSAPP_ACCESS_TOKEN ??= "test-token";
 process.env.WHATSAPP_PHONE_NUMBER_ID ??= "test-phone-number-id";
 process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN ??= "test-verify-token";
 process.env.WHATSAPP_WEBHOOK_APP_SECRET ??= "test-app-secret";
+process.env.WEBSITE_ACCESS_TOKEN_SECRET ??= "test-website-secret-value";
+process.env.WEBSITE_OTP_TTL_SECONDS ??= "300";
+process.env.WEBSITE_OTP_MAX_ATTEMPTS ??= "5";
+process.env.WEBSITE_TRUSTED_SESSION_TTL_DAYS ??= "30";
+process.env.WEBSITE_SYNC_STALE_THRESHOLD_SECONDS ??= "120";
 
 const { evaluateLifecycleTransition } = await import("./whatsapp-lifecycle");
 

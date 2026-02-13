@@ -13,6 +13,20 @@ export const env = createEnv({
 		WHATSAPP_PHONE_NUMBER_ID: z.string().min(1),
 		WHATSAPP_WEBHOOK_VERIFY_TOKEN: z.string().min(1),
 		WHATSAPP_WEBHOOK_APP_SECRET: z.string().min(1),
+		WEBSITE_ACCESS_TOKEN_SECRET: z.string().min(16),
+		WEBSITE_OTP_TTL_SECONDS: z.coerce.number().int().min(60).default(300),
+		WEBSITE_OTP_MAX_ATTEMPTS: z.coerce.number().int().min(1).max(10).default(5),
+		WEBSITE_TRUSTED_SESSION_TTL_DAYS: z.coerce
+			.number()
+			.int()
+			.min(1)
+			.max(60)
+			.default(30),
+		WEBSITE_SYNC_STALE_THRESHOLD_SECONDS: z.coerce
+			.number()
+			.int()
+			.min(10)
+			.default(120),
 		NODE_ENV: z
 			.enum(["development", "production", "test"])
 			.default("development"),

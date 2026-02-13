@@ -29,6 +29,13 @@
       "when": 1770988099469,
       "tag": "0003_curly_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1770992493250,
+      "tag": "0004_condemned_talisman",
+      "breakpoints": true
     }
   ]
 }

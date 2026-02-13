@@ -11,6 +11,12 @@ import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { applyLifecycleTransition } from "./whatsapp-lifecycle";
+import {
+	buildRsvpConfirmationMessage,
+	buildRsvpPromptMessage,
+	sendRsvpPrompt,
+} from "./whatsapp-provider";
+import { handleWhatsAppRsvpInput } from "./whatsapp-rsvp-handler";
 
 type LifecycleStatus =
 	(typeof inviteMessageLifecycleStatusEnum.enumValues)[number];
@@ -23,12 +29,36 @@ const webhookPayloadSchema = z.object({
 			changes: z.array(
 				z.object({
 					value: z.object({
+						metadata: z
+							.object({
+								phone_number_id: z.string().optional(),
+							})
+							.optional(),
 						statuses: z
 							.array(
 								z.object({
 									id: z.string().min(1),
 									status: statusSchema,
 									timestamp: z.string().optional(),
+								}),
+							)
+							.optional(),
+						messages: z
+							.array(
+								z.object({
+									id: z.string().min(1),
+									from: z.string().min(1),
+									timestamp: z.string().optional(),
+									text: z
+										.object({
+											body: z.string().optional(),
+										})
+										.optional(),
+									context: z
+										.object({
+											id: z.string().optional(),
+										})
+										.optional(),
 								}),
 							)
 							.optional(),
@@ -43,6 +73,13 @@ type NormalizedWebhookStatus = {
 	providerMessageId: string;
 	status: LifecycleStatus;
 	eventAt: Date | null;
+};
+
+type NormalizedInboundMessage = {
+	fromPhone: string;
+	providerMessageId: string;
+	contextMessageId: string | null;
+	messageText: string;
 };
 
 export type ProcessWebhookResult = {
@@ -93,6 +130,36 @@ function normalizeWebhookStatuses(payload: unknown): NormalizedWebhookStatus[] {
 					eventAt: status.timestamp
 						? new Date(Number(status.timestamp) * 1000)
 						: null,
+				});
+			}
+		}
+	}
+
+	return events;
+}
+
+function normalizeInboundMessages(
+	payload: unknown,
+): NormalizedInboundMessage[] {
+	const parsed = webhookPayloadSchema.safeParse(payload);
+	if (!parsed.success) {
+		return [];
+	}
+
+	const events: NormalizedInboundMessage[] = [];
+	for (const entry of parsed.data.entry) {
+		for (const change of entry.changes) {
+			for (const message of change.value.messages ?? []) {
+				const body = message.text?.body?.trim();
+				if (!body) {
+					continue;
+				}
+
+				events.push({
+					fromPhone: message.from,
+					providerMessageId: message.id,
+					contextMessageId: message.context?.id ?? null,
+					messageText: body,
 				});
 			}
 		}
@@ -174,13 +241,16 @@ export async function processWhatsAppWebhook(input: {
 	}
 
 	const statuses = normalizeWebhookStatuses(payload);
+	const inboundMessages = normalizeInboundMessages(payload);
 	if (statuses.length === 0) {
-		return {
-			authenticated: true,
-			processedEvents: 0,
-			ignoredEvents: 0,
-			rejectedEvents: 0,
-		};
+		if (inboundMessages.length === 0) {
+			return {
+				authenticated: true,
+				processedEvents: 0,
+				ignoredEvents: 0,
+				rejectedEvents: 0,
+			};
+		}
 	}
 
 	let processedEvents = 0;
@@ -292,6 +362,65 @@ export async function processWhatsAppWebhook(input: {
 		} else {
 			ignoredEvents += 1;
 		}
+	}
+
+	for (const inboundMessage of inboundMessages) {
+		if (!inboundMessage.contextMessageId) {
+			ignoredEvents += 1;
+			continue;
+		}
+
+		const outboundInviteMessage = await db.query.inviteMessages.findFirst({
+			where: eq(
+				inviteMessages.providerMessageId,
+				inboundMessage.contextMessageId,
+			),
+			columns: {
+				weddingId: true,
+				eventId: true,
+			},
+		});
+
+		if (!outboundInviteMessage) {
+			ignoredEvents += 1;
+			continue;
+		}
+
+		const rsvpResult = await handleWhatsAppRsvpInput({
+			weddingId: outboundInviteMessage.weddingId,
+			eventId: outboundInviteMessage.eventId,
+			phoneE164: inboundMessage.fromPhone,
+			messageText: inboundMessage.messageText,
+			providerMessageId: inboundMessage.providerMessageId,
+		});
+
+		const promptText =
+			rsvpResult.status === "completed" && rsvpResult.summary
+				? buildRsvpConfirmationMessage({
+						accepted: rsvpResult.summary.accepted,
+						declined: rsvpResult.summary.declined,
+						nextActionLabel: "UPDATE",
+					})
+				: buildRsvpPromptMessage({
+						step: rsvpResult.step,
+						label: rsvpResult.label,
+						guidance: rsvpResult.message,
+					});
+
+		await sendRsvpPrompt({
+			recipientPhoneE164: inboundMessage.fromPhone,
+			message: promptText,
+			nextActionLabel:
+				rsvpResult.nextAction === "attendance"
+					? "Share person updates"
+					: rsvpResult.nextAction === "confirm"
+						? "Reply confirm"
+						: rsvpResult.nextAction === "done"
+							? "Reply update"
+							: "Reply accept or decline",
+		});
+
+		processedEvents += 1;
 	}
 
 	return {

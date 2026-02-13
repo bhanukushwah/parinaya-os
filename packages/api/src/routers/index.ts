@@ -8,6 +8,7 @@ import { governanceRouter } from "./governance";
 import { guestImportsRouter } from "./guest-imports";
 import { guestsRouter } from "./guests";
 import { invitesRouter } from "./invites";
+import { websiteRouter } from "./website";
 
 export const appRouter = {
 	healthCheck: publicProcedure.handler(() => {
@@ -26,6 +27,7 @@ export const appRouter = {
 	audit: auditRouter,
 	audience: audienceRouter,
 	invites: invitesRouter,
+	website: websiteRouter,
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;

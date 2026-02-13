@@ -12,12 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SiteWeddingSlugRouteImport } from './routes/site.$weddingSlug'
 import { Route as EventsEventIdRouteImport } from './routes/events.$eventId'
 import { Route as DashboardInvitesRouteImport } from './routes/dashboard.invites'
 import { Route as DashboardImportsRouteImport } from './routes/dashboard.imports'
 import { Route as DashboardGuestsRouteImport } from './routes/dashboard.guests'
 import { Route as DashboardEventsRouteImport } from './routes/dashboard.events'
 import { Route as DashboardAuditRouteImport } from './routes/dashboard.audit'
+import { Route as SiteWeddingSlugVerifyRouteImport } from './routes/site.$weddingSlug.verify'
 import { Route as DashboardInvitesRunIdRouteImport } from './routes/dashboard.invites.$runId'
 import { Route as DashboardEventsEventIdAudienceRouteImport } from './routes/dashboard.events.$eventId.audience'
 
@@ -34,6 +36,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SiteWeddingSlugRoute = SiteWeddingSlugRouteImport.update({
+  id: '/site/$weddingSlug',
+  path: '/site/$weddingSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EventsEventIdRoute = EventsEventIdRouteImport.update({
@@ -66,6 +73,11 @@ const DashboardAuditRoute = DashboardAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => DashboardRoute,
 } as any)
+const SiteWeddingSlugVerifyRoute = SiteWeddingSlugVerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => SiteWeddingSlugRoute,
+} as any)
 const DashboardInvitesRunIdRoute = DashboardInvitesRunIdRouteImport.update({
   id: '/$runId',
   path: '/$runId',
@@ -88,7 +100,9 @@ export interface FileRoutesByFullPath {
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
   '/events/$eventId': typeof EventsEventIdRoute
+  '/site/$weddingSlug': typeof SiteWeddingSlugRouteWithChildren
   '/dashboard/invites/$runId': typeof DashboardInvitesRunIdRoute
+  '/site/$weddingSlug/verify': typeof SiteWeddingSlugVerifyRoute
   '/dashboard/events/$eventId/audience': typeof DashboardEventsEventIdAudienceRoute
 }
 export interface FileRoutesByTo {
@@ -101,7 +115,9 @@ export interface FileRoutesByTo {
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
   '/events/$eventId': typeof EventsEventIdRoute
+  '/site/$weddingSlug': typeof SiteWeddingSlugRouteWithChildren
   '/dashboard/invites/$runId': typeof DashboardInvitesRunIdRoute
+  '/site/$weddingSlug/verify': typeof SiteWeddingSlugVerifyRoute
   '/dashboard/events/$eventId/audience': typeof DashboardEventsEventIdAudienceRoute
 }
 export interface FileRoutesById {
@@ -115,7 +131,9 @@ export interface FileRoutesById {
   '/dashboard/imports': typeof DashboardImportsRoute
   '/dashboard/invites': typeof DashboardInvitesRouteWithChildren
   '/events/$eventId': typeof EventsEventIdRoute
+  '/site/$weddingSlug': typeof SiteWeddingSlugRouteWithChildren
   '/dashboard/invites/$runId': typeof DashboardInvitesRunIdRoute
+  '/site/$weddingSlug/verify': typeof SiteWeddingSlugVerifyRoute
   '/dashboard/events/$eventId/audience': typeof DashboardEventsEventIdAudienceRoute
 }
 export interface FileRouteTypes {
@@ -130,7 +148,9 @@ export interface FileRouteTypes {
     | '/dashboard/imports'
     | '/dashboard/invites'
     | '/events/$eventId'
+    | '/site/$weddingSlug'
     | '/dashboard/invites/$runId'
+    | '/site/$weddingSlug/verify'
     | '/dashboard/events/$eventId/audience'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,7 +163,9 @@ export interface FileRouteTypes {
     | '/dashboard/imports'
     | '/dashboard/invites'
     | '/events/$eventId'
+    | '/site/$weddingSlug'
     | '/dashboard/invites/$runId'
+    | '/site/$weddingSlug/verify'
     | '/dashboard/events/$eventId/audience'
   id:
     | '__root__'
@@ -156,7 +178,9 @@ export interface FileRouteTypes {
     | '/dashboard/imports'
     | '/dashboard/invites'
     | '/events/$eventId'
+    | '/site/$weddingSlug'
     | '/dashboard/invites/$runId'
+    | '/site/$weddingSlug/verify'
     | '/dashboard/events/$eventId/audience'
   fileRoutesById: FileRoutesById
 }
@@ -165,6 +189,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
   EventsEventIdRoute: typeof EventsEventIdRoute
+  SiteWeddingSlugRoute: typeof SiteWeddingSlugRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -188,6 +213,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/site/$weddingSlug': {
+      id: '/site/$weddingSlug'
+      path: '/site/$weddingSlug'
+      fullPath: '/site/$weddingSlug'
+      preLoaderRoute: typeof SiteWeddingSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/events/$eventId': {
@@ -231,6 +263,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/audit'
       preLoaderRoute: typeof DashboardAuditRouteImport
       parentRoute: typeof DashboardRoute
+    }
+    '/site/$weddingSlug/verify': {
+      id: '/site/$weddingSlug/verify'
+      path: '/verify'
+      fullPath: '/site/$weddingSlug/verify'
+      preLoaderRoute: typeof SiteWeddingSlugVerifyRouteImport
+      parentRoute: typeof SiteWeddingSlugRoute
     }
     '/dashboard/invites/$runId': {
       id: '/dashboard/invites/$runId'
@@ -292,11 +331,24 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
   DashboardRouteChildren,
 )
 
+interface SiteWeddingSlugRouteChildren {
+  SiteWeddingSlugVerifyRoute: typeof SiteWeddingSlugVerifyRoute
+}
+
+const SiteWeddingSlugRouteChildren: SiteWeddingSlugRouteChildren = {
+  SiteWeddingSlugVerifyRoute: SiteWeddingSlugVerifyRoute,
+}
+
+const SiteWeddingSlugRouteWithChildren = SiteWeddingSlugRoute._addFileChildren(
+  SiteWeddingSlugRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
   EventsEventIdRoute: EventsEventIdRoute,
+  SiteWeddingSlugRoute: SiteWeddingSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
