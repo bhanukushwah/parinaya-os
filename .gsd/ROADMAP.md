@@ -85,6 +85,8 @@
 
 **Goal:** Provide operational decision surfaces and vendor-ready outputs for real-time wedding coordination.
 
+**Status:** Complete (05-01 through 05-04 complete; verification passed 2026-02-13)
+
 **Requirements:** OPS-01, OPS-02, OPS-03
 
 **Success Criteria:**
@@ -92,6 +94,13 @@
 - Dashboard shows per-event invited/responded/accepted/declined/pending counts sourced from current RSVP state.
 - Operators can filter dashboard and export views by event, side, and RSVP status with consistent count alignment.
 - Export produces vendor-ready CSVs with stable headers and one row per intended guest unit/person record.
+
+**Planned Execution:**
+
+- [x] 05-01: Implement shared operations metrics dataset service and router contract.
+- [x] 05-02: Implement deterministic CSV export serializer and export endpoint.
+- [x] 05-03: Build `/dashboard/operations` UI with URL-persisted filters and export UX checkpoint.
+- [x] 05-04: Add operations tests and produce phase verification report.
 
 ### Phase 6: Gifts Basics and Safety Controls
 
@@ -133,4 +142,4 @@ Coverage check: 20/20 v1.0 requirements mapped exactly once.
 
 ---
 
-_Last updated: 2026-02-13 after Phase 4 completion and checkpoint approval_
+_Last updated: 2026-02-13 after Phase 5 execution_
