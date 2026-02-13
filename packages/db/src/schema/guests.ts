@@ -3,6 +3,8 @@ import {
 	type AnyPgColumn,
 	boolean,
 	index,
+	integer,
+	jsonb,
 	pgEnum,
 	pgTable,
 	text,
@@ -22,6 +24,28 @@ export const guestSideEnum = pgEnum("guest_side", [
 export const audienceOverrideTypeEnum = pgEnum("audience_override_type", [
 	"include",
 	"exclude",
+]);
+
+export const guestImportChannelEnum = pgEnum("guest_import_channel", [
+	"csv",
+	"contacts",
+	"manual-row",
+]);
+
+export const guestImportRunStatusEnum = pgEnum("guest_import_run_status", [
+	"pending",
+	"running",
+	"completed",
+	"failed",
+	"partial",
+]);
+
+export const guestImportRowOutcomeEnum = pgEnum("guest_import_row_outcome", [
+	"created",
+	"updated",
+	"reactivated",
+	"warning_malformed_phone",
+	"skipped_no_phone",
 ]);
 
 export const guestIdentities = pgTable(
@@ -359,11 +383,114 @@ export const eventAudienceOverrides = pgTable(
 	],
 );
 
+export const guestImportRuns = pgTable(
+	"guest_import_runs",
+	{
+		id: text("id").primaryKey(),
+		weddingId: text("wedding_id").notNull(),
+		channel: guestImportChannelEnum("channel").notNull(),
+		status: guestImportRunStatusEnum("status").default("pending").notNull(),
+		idempotencyKey: text("idempotency_key"),
+		sourceFileName: text("source_file_name"),
+		sourceFingerprint: text("source_fingerprint"),
+		rowsTotal: integer("rows_total").default(0).notNull(),
+		rowsProcessed: integer("rows_processed").default(0).notNull(),
+		rowsCreated: integer("rows_created").default(0).notNull(),
+		rowsUpdated: integer("rows_updated").default(0).notNull(),
+		rowsReactivated: integer("rows_reactivated").default(0).notNull(),
+		rowsWarning: integer("rows_warning").default(0).notNull(),
+		rowsSkipped: integer("rows_skipped").default(0).notNull(),
+		rowsFailed: integer("rows_failed").default(0).notNull(),
+		startedAt: timestamp("started_at"),
+		completedAt: timestamp("completed_at"),
+		failedAt: timestamp("failed_at"),
+		failureReason: text("failure_reason"),
+		createdByMembershipId: text("created_by_membership_id").references(
+			() => weddingMemberships.id,
+			{ onDelete: "set null" },
+		),
+		updatedByMembershipId: text("updated_by_membership_id").references(
+			() => weddingMemberships.id,
+			{ onDelete: "set null" },
+		),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.defaultNow()
+			.$onUpdate(() => /* @__PURE__ */ new Date())
+			.notNull(),
+	},
+	(table) => [
+		uniqueIndex("guest_import_runs_wedding_idempotency_unique")
+			.on(table.weddingId, table.idempotencyKey)
+			.where(sql`${table.idempotencyKey} is not null`),
+		index("guest_import_runs_wedding_status_idx").on(
+			table.weddingId,
+			table.status,
+			table.createdAt,
+		),
+	],
+);
+
+export const guestImportRows = pgTable(
+	"guest_import_rows",
+	{
+		id: text("id").primaryKey(),
+		importRunId: text("import_run_id")
+			.notNull()
+			.references(() => guestImportRuns.id, { onDelete: "cascade" }),
+		weddingId: text("wedding_id").notNull(),
+		rowNumber: integer("row_number").notNull(),
+		sourcePayload: jsonb("source_payload").notNull(),
+		rawName: text("raw_name"),
+		rawPhone: text("raw_phone"),
+		normalizedPhoneE164: text("normalized_phone_e164"),
+		resolvedIdentityId: text("resolved_identity_id").references(
+			() => guestIdentities.id,
+			{ onDelete: "set null" },
+		),
+		resolvedPersonId: text("resolved_person_id").references(
+			() => guestPeople.id,
+			{ onDelete: "set null" },
+		),
+		resolvedGuestUnitId: text("resolved_guest_unit_id").references(
+			() => guestUnits.id,
+			{ onDelete: "set null" },
+		),
+		outcome: guestImportRowOutcomeEnum("outcome")
+			.default("skipped_no_phone")
+			.notNull(),
+		isInviteable: boolean("is_inviteable").default(false).notNull(),
+		warningDetail: text("warning_detail"),
+		processingError: text("processing_error"),
+		createdAt: timestamp("created_at").defaultNow().notNull(),
+		updatedAt: timestamp("updated_at")
+			.defaultNow()
+			.$onUpdate(() => /* @__PURE__ */ new Date())
+			.notNull(),
+	},
+	(table) => [
+		uniqueIndex("guest_import_rows_run_row_unique").on(
+			table.importRunId,
+			table.rowNumber,
+		),
+		index("guest_import_rows_wedding_outcome_idx").on(
+			table.weddingId,
+			table.outcome,
+			table.isInviteable,
+		),
+		index("guest_import_rows_phone_lookup_idx").on(
+			table.weddingId,
+			table.normalizedPhoneE164,
+		),
+	],
+);
+
 export const guestIdentitiesRelations = relations(
 	guestIdentities,
 	({ many, one }) => ({
 		people: many(guestPeople),
 		deliveryGuestUnits: many(guestUnits),
+		importRows: many(guestImportRows),
 		createdByMembership: one(weddingMemberships, {
 			fields: [guestIdentities.createdByMembershipId],
 			references: [weddingMemberships.id],
@@ -382,6 +509,7 @@ export const guestPeopleRelations = relations(guestPeople, ({ many, one }) => ({
 	}),
 	memberships: many(guestUnitMembers),
 	tags: many(guestPersonTags),
+	importRows: many(guestImportRows),
 	createdByMembership: one(weddingMemberships, {
 		fields: [guestPeople.createdByMembershipId],
 		references: [weddingMemberships.id],
@@ -400,6 +528,7 @@ export const guestUnitsRelations = relations(guestUnits, ({ many, one }) => ({
 	members: many(guestUnitMembers),
 	tags: many(guestUnitTags),
 	audienceOverrides: many(eventAudienceOverrides),
+	importRows: many(guestImportRows),
 	createdByMembership: one(weddingMemberships, {
 		fields: [guestUnits.createdByMembershipId],
 		references: [weddingMemberships.id],
@@ -527,6 +656,43 @@ export const eventAudienceOverridesRelations = relations(
 		createdByMembership: one(weddingMemberships, {
 			fields: [eventAudienceOverrides.createdByMembershipId],
 			references: [weddingMemberships.id],
+		}),
+	}),
+);
+
+export const guestImportRunsRelations = relations(
+	guestImportRuns,
+	({ many, one }) => ({
+		rows: many(guestImportRows),
+		createdByMembership: one(weddingMemberships, {
+			fields: [guestImportRuns.createdByMembershipId],
+			references: [weddingMemberships.id],
+		}),
+		updatedByMembership: one(weddingMemberships, {
+			fields: [guestImportRuns.updatedByMembershipId],
+			references: [weddingMemberships.id],
+		}),
+	}),
+);
+
+export const guestImportRowsRelations = relations(
+	guestImportRows,
+	({ one }) => ({
+		importRun: one(guestImportRuns, {
+			fields: [guestImportRows.importRunId],
+			references: [guestImportRuns.id],
+		}),
+		resolvedIdentity: one(guestIdentities, {
+			fields: [guestImportRows.resolvedIdentityId],
+			references: [guestIdentities.id],
+		}),
+		resolvedPerson: one(guestPeople, {
+			fields: [guestImportRows.resolvedPersonId],
+			references: [guestPeople.id],
+		}),
+		resolvedGuestUnit: one(guestUnits, {
+			fields: [guestImportRows.resolvedGuestUnitId],
+			references: [guestUnits.id],
 		}),
 	}),
 );
