@@ -14,7 +14,7 @@ completed: 2026-02-14
 
 # Phase 6 Plan 05 Summary
 
-**Phase 06 now has regression coverage for lifecycle/contribution/router contracts and a verification report with explicit human-checkpoint dependencies for final sign-off.**
+**Phase 06 now has regression coverage for lifecycle/contribution/router contracts and a verification report with approved human checkpoints and final pass verdict.**
 
 ## Deliverables
 
@@ -29,6 +29,7 @@ completed: 2026-02-14
 - `bunx tsc --noEmit -p packages/api/tsconfig.json` passed.
 - `bunx tsc --noEmit -p apps/web/tsconfig.json` passed.
 - `bunx tsc --noEmit -p apps/server/tsconfig.json` passed.
+- Human checkpoints for `06-03` (dashboard) and `06-04` (website) were approved by user and recorded in `06-VERIFICATION.md`.
 
 ## Deviations
 

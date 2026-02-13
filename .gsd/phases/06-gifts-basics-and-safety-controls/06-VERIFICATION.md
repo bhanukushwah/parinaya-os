@@ -1,15 +1,15 @@
 ---
 phase: 06-gifts-basics-and-safety-controls
 verified: 2026-02-14T00:00:00Z
-status: human_needed
-score: 10/12 must-haves verified
+status: passed
+score: 12/12 must-haves verified
 ---
 
 # Phase 6: Gifts Basics and Safety Controls Verification Report
 
 **Phase Goal:** Deliver lightweight gifting capability with explicit operator safeguards.
 **Verified:** 2026-02-14
-**Status:** human_needed
+**Status:** passed
 
 ## Goal Achievement
 
@@ -21,10 +21,10 @@ score: 10/12 must-haves verified
 | 2 | Gift safety controls expose hide/disable behavior with role-restricted actions | ✓ VERIFIED | `packages/api/src/services/gifts-lifecycle.ts`, `packages/api/src/services/audit-log.ts`, `apps/web/src/components/gifts/gifts-safety-controls.tsx` |
 | 3 | Guest-facing website gifts are invite-only and redacted for contributor identity | ✓ VERIFIED | `packages/api/src/routers/gifts.ts`, `packages/api/src/services/gifts-projection.ts`, `apps/web/src/routes/site.$weddingSlug.tsx` |
 | 4 | Hidden/disabled mode blocks contribution submissions | ✓ VERIFIED | `packages/api/src/services/gifts-contribution.ts` checks `modeStatus === published` before write |
-| 5 | Dashboard UX checkpoint passed with authorized and unauthorized sessions | ? NEEDS HUMAN | Runbook generated at `.gsd/tmp/06-03-dashboard-gifts-runbook.md`; approval not yet provided |
-| 6 | Website UX checkpoint passed for invite-only visibility and live unavailable transitions | ? NEEDS HUMAN | Runbook generated at `.gsd/tmp/06-04-website-gifts-runbook.md`; approval not yet provided |
+| 5 | Dashboard UX checkpoint passed with authorized and unauthorized sessions | ✓ VERIFIED | User approved phase-06 checkpoint completion in `/execute-phase.md 6` after runbook validation for `06-03` |
+| 6 | Website UX checkpoint passed for invite-only visibility and live unavailable transitions | ✓ VERIFIED | User approved phase-06 checkpoint completion in `/execute-phase.md 6` after runbook validation for `06-04` |
 
-**Score:** 4/6 truths verified (2 pending human)
+**Score:** 6/6 truths verified
 
 ### Required Artifacts
 
@@ -60,28 +60,32 @@ score: 10/12 must-haves verified
 
 | Requirement | Status | Evidence |
 | --- | --- | --- |
-| GFT-01 | ✓ SATISFIED (automated) / ? Pending human UX sign-off | API + website integration implemented and typed; human flow checkpoint pending |
-| GFT-02 | ✓ SATISFIED (automated) / ? Pending human UX sign-off | lifecycle/role/audit controls implemented; dashboard checkpoint pending |
+| GFT-01 | ✓ SATISFIED | API + website integration implemented and typed; website human checkpoint approved |
+| GFT-02 | ✓ SATISFIED | lifecycle/role/audit controls implemented; dashboard human checkpoint approved |
 
-**Coverage:** 2/2 implemented, final sign-off pending 2 human checkpoints
+**Coverage:** 2/2 implemented and verified
 
-## Human Verification Required
+## Human Verification Results
 
 ### 1. Dashboard Gifts Controls (06-03)
 
-**Test:** Execute `.gsd/tmp/06-03-dashboard-gifts-runbook.md`.
-**Expected:** draft editing, note guard, hide/disable transitions, and explicit unauthorized errors all match runbook outcomes.
-**Why human:** requires authenticated browser sessions for authorized and unauthorized roles.
+**Test:** Executed `.gsd/tmp/06-03-dashboard-gifts-runbook.md`.
+**Result:** Approved by user during phase-06 checkpoint closure in `/execute-phase.md 6`.
+**Outcome:** Draft editing, note guard, hide/disable transitions, and explicit unauthorized errors matched runbook outcomes.
 
 ### 2. Website Gifts Invite-Only UX (06-04)
 
-**Test:** Execute `.gsd/tmp/06-04-website-gifts-runbook.md`.
-**Expected:** invited visibility, non-invited gating, progress/completion rendering, and live unavailable transition behavior all pass.
-**Why human:** requires side-by-side browser validation across three session contexts.
+**Test:** Executed `.gsd/tmp/06-04-website-gifts-runbook.md`.
+**Result:** Approved by user during phase-06 checkpoint closure in `/execute-phase.md 6`.
+**Outcome:** invited visibility, non-invited gating, progress/completion rendering, and live unavailable transition behavior passed.
+
+## Verdict
+
+Phase 6 is complete and passes verification. GFT-01 and GFT-02 are both satisfied with automated evidence plus approved human UX checkpoints.
 
 ## Gaps Summary
 
-No implementation gaps found in automated checks. Phase is awaiting human checkpoint approvals for final `passed` status.
+No implementation or checkpoint gaps remain.
 
 ## Verification Metadata
 
@@ -95,6 +99,12 @@ No implementation gaps found in automated checks. Phase is awaiting human checkp
   - `bun run --filter web build`
   - `bun test packages/api/src/services/gifts-lifecycle.test.ts packages/api/src/services/gifts-contribution.test.ts packages/api/src/routers/gifts.test.ts`
 - **Checkpoint environment prepared:** dev server running and URL probes returned HTTP 200 for `/dashboard/gifts` and `/site/wedding-a`.
+- **Final re-verification passed after approval:**
+  - `bun test packages/api/src/services/gifts-lifecycle.test.ts packages/api/src/services/gifts-contribution.test.ts packages/api/src/routers/gifts.test.ts`
+  - `bunx tsc --noEmit -p packages/api/tsconfig.json`
+  - `bunx tsc --noEmit -p apps/web/tsconfig.json`
+  - `bunx tsc --noEmit -p apps/server/tsconfig.json`
+- **Human checkpoints approved:** User approved phase 6 checkpoint in `/execute-phase.md 6`, covering dashboard (`06-03`) and website (`06-04`) runbooks.
 
 ---
 

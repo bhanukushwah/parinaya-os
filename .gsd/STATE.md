@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 6 (in progress)
-- Plan: 06-01 through 06-05 executed
-- Status: Automated execution complete; awaiting human approvals for 06-03 and 06-04 checkpoints (`06-VERIFICATION.md` status: `human_needed`)
-- Last activity: 2026-02-14 — Executed gifts phase plans, added regression tests, generated runbooks/session artifacts, and published verification report
+- Phase: 6 (complete)
+- Plan: 06-01 through 06-05 complete
+- Status: Phase 6 complete; user-approved human checkpoints recorded and `06-VERIFICATION.md` status moved to `passed`
+- Last activity: 2026-02-14 — Finalized phase-06 checkpoint approvals, reran verification checks, and closed phase status artifacts
 
 ## Accumulated Context
 
@@ -94,4 +94,5 @@
 - Website gifts surfaces now exist at `apps/web/src/routes/site.$weddingSlug.tsx` and `apps/web/src/components/website/gifts-*.tsx`.
 - Gifts regression tests now exist at `packages/api/src/services/gifts-lifecycle.test.ts`, `packages/api/src/services/gifts-contribution.test.ts`, and `packages/api/src/routers/gifts.test.ts`.
 - Human checkpoint runbooks/session placeholders are prepared under `.gsd/tmp/06-03-*` and `.gsd/tmp/06-04-*`.
-- Phase verification artifact now exists at `.gsd/phases/06-gifts-basics-and-safety-controls/06-VERIFICATION.md` with status `human_needed` pending checkpoint approvals.
+- Human checkpoint result: phase-06 gifts dashboard and website verification approved by user.
+- Phase verification artifact `.gsd/phases/06-gifts-basics-and-safety-controls/06-VERIFICATION.md` is now `passed` (12/12 must-haves).
