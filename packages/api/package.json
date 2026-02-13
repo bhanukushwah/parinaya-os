@@ -1,29 +1,30 @@
 {
-  "name": "@parinaya-os/api",
-  "type": "module",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
-  },
-  "scripts": {},
-  "dependencies": {
-    "@orpc/client": "catalog:",
-    "@orpc/openapi": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/zod": "catalog:",
-    "@parinaya-os/auth": "workspace:*",
-    "@parinaya-os/db": "workspace:*",
-    "@parinaya-os/env": "workspace:*",
-    "dotenv": "catalog:",
-    "zod": "catalog:"
-  },
-  "devDependencies": {
-    "@parinaya-os/config": "workspace:*",
-    "elysia": "catalog:",
-    "typescript": "catalog:"
-  }
+	"name": "@parinaya-os/api",
+	"type": "module",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"scripts": {},
+	"dependencies": {
+		"@orpc/client": "catalog:",
+		"@orpc/openapi": "catalog:",
+		"@orpc/server": "catalog:",
+		"@orpc/zod": "catalog:",
+		"@parinaya-os/auth": "workspace:*",
+		"@parinaya-os/db": "workspace:*",
+		"@parinaya-os/env": "workspace:*",
+		"dotenv": "catalog:",
+		"libphonenumber-js": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@parinaya-os/config": "workspace:*",
+		"elysia": "catalog:",
+		"typescript": "catalog:"
+	}
 }
