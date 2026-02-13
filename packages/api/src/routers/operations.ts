@@ -13,6 +13,7 @@ import {
 	OPERATIONS_RSVP_FILTER_VALUES,
 	OPERATIONS_SIDE_FILTER_VALUES,
 } from "../services/operations-dashboard";
+import { buildOperationsCsv } from "../services/operations-export";
 
 const operationsFiltersInput = z.object({
 	weddingId: z.string().min(1),
@@ -114,5 +115,41 @@ export const operationsRouter = {
 			return getOperationsFilterOptions({
 				weddingId: input.weddingId,
 			});
+		}),
+
+	exportCsv: protectedProcedure
+		.input(operationsFiltersInput)
+		.handler(async ({ context, input }) => {
+			await assertParentOperationsAccess({
+				weddingId: input.weddingId,
+				userId: context.session.user.id,
+			});
+
+			const filters = normalizeOperationsFilters({
+				eventId: input.eventId,
+				side: input.side,
+				rsvpStatus: input.rsvpStatus,
+			});
+
+			const dataset = await getOperationsDataset({
+				weddingId: input.weddingId,
+				filters,
+			});
+
+			const exported = buildOperationsCsv(dataset.rows);
+			const eventToken =
+				filters.eventId === "all" ? "all-events" : `event-${filters.eventId}`;
+			const fileName = `operations-${eventToken}-${new Date().toISOString().slice(0, 10)}.csv`;
+
+			return {
+				weddingId: input.weddingId,
+				filters,
+				rowCount: exported.rowCount,
+				dataAsOf: dataset.dataAsOf,
+				headers: exported.headers,
+				csv: exported.csv,
+				fileName,
+				generatedAt: new Date(),
+			};
 		}),
 };
