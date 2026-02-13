@@ -40,6 +40,8 @@
 
 **Goal:** Operationalize compliant outbound invite delivery with reliable delivery lifecycle visibility.
 
+**Status:** Complete (03-01 through 03-05 complete; verification passed 2026-02-13)
+
 **Requirements:** WA-01, WA-02, WA-04
 
 **Success Criteria:**
@@ -47,6 +49,14 @@
 - Parent Admin can send invites to selected audiences through Meta WhatsApp Cloud API template flows.
 - Webhook-ingested status updates drive monotonic per-message lifecycle states (`sent`, `delivered`, `read`, `failed`) visible to operators.
 - Do-Not-Message and send-eligibility policy checks block non-compliant recipients before enqueue and emit rejection reasons.
+
+**Planned Execution:**
+
+- [x] 03-01: Add whatsapp-domain schema + env configuration baseline.
+- [x] 03-02: Implement compliant invite dispatch pipeline and invite router.
+- [x] 03-03: Implement webhook verification/ingestion with monotonic lifecycle transitions.
+- [x] 03-04: Build invite send and lifecycle monitoring dashboard routes.
+- [x] 03-05: Add lifecycle/policy tests and produce phase verification report.
 
 ### Phase 4: RSVP Completion + Wedding Website Sync
 
@@ -113,4 +123,4 @@ Coverage check: 20/20 v1.0 requirements mapped exactly once.
 
 ---
 
-_Last updated: 2026-02-13 after Phase 2 gap-closure plan 02-06 and verification pass_
+_Last updated: 2026-02-13 after Phase 3 execution + verification (03-01 through 03-05)_

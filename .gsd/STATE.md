@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 3 (planned)
-- Plan: 03-04 complete (checkpoint pending)
-- Status: Phase 3 wave-1 implementation complete (03-01..03-04) with human verification required before 03-05
-- Last activity: 2026-02-13 — Implemented schema/env foundation, dispatch pipeline, webhook lifecycle ingestion, and invite dashboard routes
+- Phase: 3 (complete)
+- Plan: 03-05 complete (phase verification passed)
+- Status: Phase 3 execution complete with approved dashboard checkpoint and passed verification report
+- Last activity: 2026-02-13 — Completed lifecycle/policy tests and published 03-VERIFICATION passed verdict
 
 ## Accumulated Context
 
@@ -69,4 +69,6 @@
 - Web dashboard now includes `/dashboard/invites` and `/dashboard/invites/$runId` with server-backed run/message counters, blocked reasons, and lifecycle traces.
 - Route tree now includes invite dashboard routes at `apps/web/src/routeTree.gen.ts`.
 - Verification note (03-01..03-04): `bun run db:generate`, `bunx tsc --noEmit -p packages/db/tsconfig.json`, `bunx tsc --noEmit -p packages/env/tsconfig.json`, `bunx tsc --noEmit -p packages/api/tsconfig.json`, `bunx tsc --noEmit -p apps/server/tsconfig.json`, `bunx tsc --noEmit -p apps/web/tsconfig.json`, and `bun run --filter web build` passed.
-- Pending checkpoint: human verification required for invite dashboard flow before executing 03-05.
+- Human checkpoint result: invite dashboard verification approved by user.
+- Verification note (03-05): `bun test packages/api/src/services/whatsapp-lifecycle.test.ts packages/api/src/services/whatsapp-policy.test.ts` and `bunx tsc --noEmit -p packages/api/tsconfig.json` passed.
+- Verification result (phase): `.gsd/phases/03-whatsapp-invite-delivery-and-compliance-safety/03-VERIFICATION.md` passed (score 9/9).
