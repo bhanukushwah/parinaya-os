@@ -2,10 +2,10 @@
 
 ## Current Position
 
-- Phase: 1 (complete)
-- Plan: 02-02 complete (Phase 2 in progress)
-- Status: Phase 2 API guest management layer now active on top of 02-01 schema foundation
-- Last activity: 2026-02-13 — Executed 02-02 guest router + identity normalization/upsert plan
+- Phase: 2 (in progress)
+- Plan: 02-03 complete (Phase 2 in progress)
+- Status: Phase 2 import pipeline now active across CSV/contacts/manual channels with deterministic dedupe + warning persistence
+- Last activity: 2026-02-13 — Executed 02-03 import pipeline and guestImports API plan
 
 ## Accumulated Context
 
@@ -42,4 +42,10 @@
 - Deterministic phone-only identity workflow is now centralized in `packages/api/src/services/phone-normalization.ts` and `packages/api/src/services/guest-identity.ts` for reusable normalization + upsert/reactivation behavior.
 - Authorization policy matrix now includes `guest.read`/`guest.edit` actions and app router composition now exports `guests` domain for typed client usage.
 - Verification note (02-02): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed; behavioral invariants (reactivation, one-active-membership, audit emission) are enforced through service/router logic and existing DB partial unique indexes.
-- Next execution point: Phase 2 plan 02-03 execution.
+- Phase 2 import adapters now normalize CSV, contacts, and manual rows into a single canonical payload contract before persistence.
+- Shared import service `runGuestImport` now performs deterministic ingest/normalize/resolve/persist flow using phone normalization + `upsertGuestIdentity` and workspace-wide dedupe behavior.
+- Import rows with malformed/no-phone inputs are now persisted with warning outcomes and `isInviteable=false`, preserving visibility without dropping data.
+- Guest import run tracking now includes idempotency replay semantics and persisted counters for created/updated/reactivated/warning/skipped/failed outcomes.
+- API router now exposes `guestImports` procedures for CSV, contacts, and manual import execution plus run list/detail and warning-row retrieval under guest role boundaries.
+- Verification note (02-03): `bunx tsc --noEmit -p packages/api/tsconfig.json` passed; route wiring confirms all channels invoke shared `runGuestImport` path.
+- Next execution point: Phase 2 plan 02-04 execution.
