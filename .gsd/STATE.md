@@ -3,9 +3,9 @@
 ## Current Position
 
 - Phase: 2 (complete)
-- Plan: 02-05 complete (Phase 2 complete)
-- Status: Phase 2 now includes operator dashboard routes for guest management, imports, and event audience preview/precheck workflows
-- Last activity: 2026-02-13 — Executed 02-05 dashboard guest/import/audience route plan
+- Plan: 02-06 complete (gap closure complete)
+- Status: Phase 2 now has service-owned audience-to-recipient wiring with verification passed
+- Last activity: 2026-02-13 — Executed 02-06 gap-closure plan for audience service/router wiring
 
 ## Accumulated Context
 
@@ -56,4 +56,7 @@
 - Web dashboard now includes `/dashboard/events/$eventId/audience` for side/tags/search filtering (AND semantics), include/exclude overrides, and server-computed recipient count preview/precheck.
 - Generated route tree now includes all new phase-02 dashboard routes at `apps/web/src/routeTree.gen.ts`.
 - Verification note (02-05): `bun run --filter web build` and `bunx tsc --noEmit -p apps/web/tsconfig.json` passed.
+- Phase 2 gap-closure plan (`02-06`) moved `resolveRecipients(...)` wiring into `packages/api/src/services/audience-builder.ts` and removed independent router orchestration.
+- Audience router now consumes `audience.recipients` for both `preview` and `precheckSend`, preserving the shared computation path and stable response contract.
+- Verification result (phase): `.gsd/phases/02-guest-model-import-pipeline-and-audience-selection/02-VERIFICATION.md` now passes with no remaining must-have gaps.
 - Next execution point: Phase 3 planning and execution.
