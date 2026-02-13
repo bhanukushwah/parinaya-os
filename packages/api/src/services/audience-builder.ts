@@ -2,6 +2,11 @@ import { db } from "@parinaya-os/db";
 import { type guestSideEnum, guestUnits } from "@parinaya-os/db/schema/guests";
 import { asc } from "drizzle-orm";
 
+import {
+	type ResolveRecipientsResult,
+	resolveRecipients,
+} from "./recipient-resolver";
+
 type GuestSide = (typeof guestSideEnum.enumValues)[number];
 
 export type BuildAudienceInput = {
@@ -15,6 +20,7 @@ export type BuildAudienceInput = {
 
 export type BuildAudienceResult = {
 	guestUnitIds: string[];
+	recipients: ResolveRecipientsResult;
 	trace: {
 		totalActiveUnits: number;
 		counts: {
@@ -225,8 +231,14 @@ export async function buildAudience(
 		.map((candidate) => candidate.id)
 		.filter((candidateId) => selectedIds.has(candidateId));
 
+	const recipients = await resolveRecipients({
+		weddingId: input.weddingId,
+		guestUnitIds: finalGuestUnitIds,
+	});
+
 	return {
 		guestUnitIds: finalGuestUnitIds,
+		recipients,
 		trace: {
 			totalActiveUnits: candidates.length,
 			counts: {
